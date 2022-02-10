@@ -1,0 +1,6 @@
+interface ICreateBreedDTO 
+{
+ 
+}
+
+export { ICreateBreedDTO };

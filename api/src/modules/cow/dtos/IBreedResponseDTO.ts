@@ -1,0 +1,6 @@
+interface IBreedResponseDTO 
+{
+ 
+}
+
+export { IBreedResponseDTO  };

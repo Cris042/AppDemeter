@@ -16,6 +16,11 @@ export class VaccineReport1617143008768 implements MigrationInterface {
                 },
 
                 {
+                    name: 'dateApplication',
+                    type: 'varchar'
+                },
+
+                {
                     name: 'vaccineID',
                     type: 'integer',
                 },

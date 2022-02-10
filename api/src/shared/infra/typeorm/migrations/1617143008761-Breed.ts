@@ -16,11 +16,6 @@ export class Breed1617143008761 implements MigrationInterface {
                 },
 
                 {
-                    name: "id_user",
-                    type: "uuid",
-                },
-
-                {
                     name: 'name',
                     type: 'varchar',
                     isUnique: true,
