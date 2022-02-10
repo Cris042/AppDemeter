@@ -1,0 +1,67 @@
+   "Telas"
+   {
+      tela : "login"
+      tela : "home"
+      tela : "cadastro piquete"
+      tela : "Gerenciar Gados"
+      tela : "Locaçao de Gados"
+      *tela : Minha conta   
+      *tela : "Minha propriedade"  
+   }
+
+   {
+      *login
+      Banco de dados 
+   }
+    
+   "Gerenciar Gados"
+   {
+      cadastro, 
+      *ditar, 
+      *pesquisa
+   }
+
+   "Gerenciar piquete"
+   {
+      cadastro, 
+      *ditar, 
+      *pesquisa
+   }
+
+   "Locaçao de Gados"
+   {
+      *adicionar,
+      *deletar,
+      *pesquisa
+   }
+   
+   "Home\piquetes"
+   {
+      cadastro, 
+      *ditar, 
+   } 
+    
+   "minha conta\meus dados"
+   {
+      *cadastro, 
+      *ditar, 
+   }
+
+   "minha conta\minha propriedade"
+   {
+      *cadastro, 
+      *ditar, 
+      *deletar, 
+   }
+  
+
+Ajustes
+
+- limpa os input depois de realizar um cadastro
+- mostra uma tela de carregando enquato procura as informaçoes em listagem de gados e listagem de piquetes
+
+- mostar as informaçoes dos gados e dos pasto na pagina de gerenciar Gados
+- as informaçoes do: tipo, status, size e localizaçao nao estao aparecendo corretamente na hora de editar piquete
+
+
+
