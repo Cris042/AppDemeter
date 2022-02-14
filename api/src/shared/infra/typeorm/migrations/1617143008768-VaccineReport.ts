@@ -30,6 +30,12 @@ export class VaccineReport1617143008768 implements MigrationInterface {
                     type: 'integer',
                 },
 
+                {
+                    name: 'isBackup',
+                    type: 'integer',
+                    default: 0,
+                },
+
               ],
               
             })

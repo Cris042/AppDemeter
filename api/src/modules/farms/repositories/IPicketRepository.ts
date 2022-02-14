@@ -5,7 +5,7 @@ interface IPicketRepository
 {
   create( data: ICreatePicketDTO ): Promise<void>;
   save( picket: Picket ): Promise<Picket>;
-  findById( id: string ): Promise<Picket>;
+  findByName( name: string ): Promise<Picket>;
 }
 
 export { IPicketRepository  };

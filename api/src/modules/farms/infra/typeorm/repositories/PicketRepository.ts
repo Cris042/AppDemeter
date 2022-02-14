@@ -41,10 +41,10 @@ class PicketRepository implements IPicketRepository
     await this.repository.save( picket );
   }
 
-  async findById( id : string ): Promise<Picket> 
+  async findByName( name : string ): Promise<Picket> 
   {
 
-     const picket = await this.repository.findOne( id );
+     const picket = await this.repository.findOne( name );
      return picket;
 
   }

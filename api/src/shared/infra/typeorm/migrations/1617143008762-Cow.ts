@@ -87,6 +87,12 @@ export class Cow1617143008762 implements MigrationInterface {
                     name: 'dateOfBirth',
                     type: 'varchar',
                 },
+
+                {
+                    name: 'isBackup',
+                    type: 'integer',
+                    default: 0,
+                },
                 
               ],
 

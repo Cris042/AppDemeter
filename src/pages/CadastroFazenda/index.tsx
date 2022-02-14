@@ -56,7 +56,8 @@ export default function Data() {
         size: String( size ),
         latitude: String( latitude ),
         longitude: String( longitude ),
-        status: String( status )
+        status: String( status ),
+        id_user: String( false ),
       }
 
       try 

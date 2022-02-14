@@ -53,6 +53,12 @@ export class CreateUsers1617143008760 implements MigrationInterface {
               type: "timestamp",
               default: "now()",
             },
+
+            {
+              name: 'isBackup',
+              type: 'integer',
+              default: 0,
+            },
             
           ],
         })

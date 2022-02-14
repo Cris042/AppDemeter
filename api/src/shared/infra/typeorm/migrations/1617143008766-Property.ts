@@ -52,8 +52,9 @@ export class Property1617143008766 implements MigrationInterface {
                 },
 
                 {
-                    name: 'propertyID',
-                    type: 'integer',    
+                    name: 'isBackup',
+                    type: 'integer',
+                    default: 0,
                 },
 
                 

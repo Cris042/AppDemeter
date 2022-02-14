@@ -11,7 +11,7 @@ class CreateFarmsUseCase
   constructor
   (
     @inject("PicketRepository")
-    private usersRepository: IPicketRepository
+    private PicketRepository: IPicketRepository
   ) {}
 
   async execute({
@@ -26,14 +26,14 @@ class CreateFarmsUseCase
     id_user,
   }: ICreatePicketDTO ): Promise<void> 
   {
-    const userAlreadyExists = await this.usersRepository.findById( id );
+    const picketAlreadyExists = await this.PicketRepository.findByName( name );
 
-    if ( userAlreadyExists ) 
+    if ( picketAlreadyExists ) 
     {
       throw new AppError("Picket already exists");
     }
 
-    await this.usersRepository.create({
+    await this.PicketRepository.create({
       name,
       countFood,
       type,

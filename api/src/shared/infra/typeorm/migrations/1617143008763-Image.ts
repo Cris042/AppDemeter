@@ -26,8 +26,9 @@ export class Image1617143008763 implements MigrationInterface {
                 },
 
                 {
-                    name: 'propertyID',
+                    name: 'isBackup',
                     type: 'integer',
+                    default: 0,
                 },
                 
               ],

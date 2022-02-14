@@ -61,6 +61,12 @@ export class Picket1617143008764 implements MigrationInterface {
                     default: 0,
                 },
 
+                {
+                    name: 'isBackup',
+                    type: 'integer',
+                    default: 0,
+                },
+
               ],
 
             })
