@@ -4,6 +4,7 @@
     PrimaryColumn,
   } from 'typeorm';
 
+  import { v4 as uuidV4 } from "uuid";
   @Entity('property')
 
   export default class Property
@@ -32,5 +33,13 @@
 
       @Column()
       longitude: number;
+
+      constructor() 
+      {
+          if (!this.id) 
+          {
+            this.id = uuidV4();
+          }
+      }
 
   }

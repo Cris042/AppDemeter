@@ -1,22 +1,30 @@
 import {
   Entity,
   Column,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm';
   
-
+import { v4 as uuidV4 } from "uuid";
 @Entity('pastureType')
 
 export default class PastureType
 {
 
-    @PrimaryGeneratedColumn('increment')
-    id: number;
+    @PrimaryColumn()
+    id: string;
 
     @Column()
     name: string;
 
     @Column()
     amountOffood: number;
+
+    constructor() 
+    {
+        if (!this.id) 
+        {
+          this.id = uuidV4();
+        }
+    }
 
  }

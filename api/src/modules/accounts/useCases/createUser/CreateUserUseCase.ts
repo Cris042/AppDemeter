@@ -6,8 +6,10 @@ import { ICreateUsersDTO } from "../../dtos/ICreateUserDTO";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 
 @injectable()
-class CreateUserCase {
-  constructor(
+class CreateUserCase 
+{
+  constructor
+  (
     @inject("UsersRepository")
     private usersRepository: IUsersRepository
   ) {}
@@ -17,10 +19,12 @@ class CreateUserCase {
     email,
     password,
     isAdmin,
-  }: ICreateUsersDTO): Promise<void> {
-    const userAlreadyExists = await this.usersRepository.findByEmail(email);
+  }: ICreateUsersDTO): Promise<void> 
+  {
+    const userAlreadyExists = await this.usersRepository.findByEmail( email );
 
-    if (userAlreadyExists) {
+    if ( userAlreadyExists ) 
+    {
       throw new AppError("User already exists");
     }
 
@@ -32,6 +36,7 @@ class CreateUserCase {
       password: passwordHash,
       isAdmin,
     });
+
   }
 }
 

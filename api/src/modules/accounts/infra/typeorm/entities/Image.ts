@@ -4,7 +4,7 @@
     PrimaryColumn,
   } from 'typeorm';
   
-  
+  import { v4 as uuidV4 } from "uuid";
   @Entity('images')
 
   export default class Image 
@@ -20,5 +20,13 @@
 
       @Column()
       propertyID: number;
+
+      constructor() 
+      {
+          if (!this.id) 
+          {
+            this.id = uuidV4();
+          }
+      }
   }
   

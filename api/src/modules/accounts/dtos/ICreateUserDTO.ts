@@ -1,4 +1,5 @@
-interface ICreateUsersDTO {
+interface ICreateUsersDTO 
+{
   name: string;
   password: string;
   email: string;

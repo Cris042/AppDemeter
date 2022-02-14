@@ -1,10 +1,9 @@
 import { Router } from "express";
+import { CreateFarmsController } from "@modules/farms/useCases/createFarms/CreateFarmsController";
 
 const farmRoutes = Router();
 
-farmRoutes.post( "/backup", ( req, res ) => 
-{ 
-    console.log( req.body.expensives );
-});
+const createFarmsController = new CreateFarmsController();
+farmRoutes.post( "/backup", createFarmsController.handle );
 
 export { farmRoutes };

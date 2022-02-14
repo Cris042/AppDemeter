@@ -1,16 +1,17 @@
   import {
     Entity,
     Column,
-    PrimaryGeneratedColumn,
+    PrimaryColumn,
   } from 'typeorm';
 
+  import { v4 as uuidV4 } from "uuid";
    @Entity('picketUsed')
 
   export default class PicketUsed
   {
 
-      @PrimaryGeneratedColumn('increment')
-      id: number;
+      @PrimaryColumn()
+      id: string;
 
       @Column()
       dateEntryPicket: String;
@@ -27,5 +28,11 @@
       @Column()
       occupancyRate: number;
 
-
+      constructor() 
+      {
+          if (!this.id) 
+          {
+            this.id = uuidV4();
+          }
+      }
   }
