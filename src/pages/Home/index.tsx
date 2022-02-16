@@ -116,7 +116,7 @@ export default function Map()
        const responseFormatted = response ? JSON.parse( response ) : [];
        const expensives = responseFormatted;
 
-       if( backupEf === false )
+       if( backupEf === false && expensives != null ) 
           await api.post( "farms/backup", { expensives } );
     }
 

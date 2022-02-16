@@ -4,8 +4,12 @@ import { ScrollView, Text, TextInput, View, Switch, } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { RectButton } from "react-native-gesture-handler";
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Picker } from '@react-native-picker/picker';
+import { useForm } from 'react-hook-form';
 import uuid from 'react-native-uuid';
+import * as Yup from 'yup';
+
 
 import styles from "./styles";
 
@@ -25,6 +29,12 @@ interface Types
   amountOffood: number;
 }
 
+const schema = Yup.object().shape
+({
+    name: Yup.string().min( 3, "Digite Pelo menos 3 Caracteres" ),
+    type: Yup.number().required().positive().integer(),
+});
+
 export default function Data() {
   const navigation = useNavigation();
   const route = useRoute();
@@ -41,23 +51,27 @@ export default function Data() {
       const dataKey = '@appIF:Farm';
       const { latitude, longitude } = params.position;
 
+      // const { control, handleSubmit, reset, formState: { errors } } = useForm({
+      //   resolver: yupResolver( schema )
+      // });
+
       const amountOffood = 
       ( 
           type === "Braquiarão" ? 14000 : type === "Mombaça" ? 28000 : type === "Tanzania" ? 21000 : 
-          type === "Tifton" ? 12600 : type === "Colonião" ? 12600 : -1
+          type === "Tifton" ? 12600 : type === "Colonião" ? 12600 : 14000
       );
 
       const obj = 
       {
         id: String( uuid.v4() ),
-        name: name,
+        name: name === "" ? "Pasto " + Math.floor( Math.random() * 1000 + 256 ) : name ,
         countFood: String( amountOffood ),
-        type: String( type ),
+        type: type === "" ? "Braquiarão" : String( type ),
         size: String( size ),
         latitude: String( latitude ),
         longitude: String( longitude ),
         status: String( status ),
-        id_user: String( false ),
+        id_user: String( uuid.v4() ),
       }
 
       try 
@@ -87,7 +101,6 @@ export default function Data() {
       {
         const dataKey = '@appIF:Farm';
         const data = await AsyncStorage.getItem( dataKey );
-        // console.log( JSON.parse( data! ) );
       }
 
       loadData();
@@ -102,7 +115,7 @@ export default function Data() {
       <Text style={styles.title}>Cadastro de Pasto</Text>
 
       <Text style={styles.label}>Nome</Text>
-      <TextInput style={styles.input} value = { name }  placeholder = "Nome do pasto ( Minimo 3 letras )" onChangeText = { setName } />
+      <TextInput style={styles.input} value = { name }  placeholder = "Nome do pasto ( O nome será gerado automaticamente caso deixer o campo vazio )" onChangeText = { setName } />
 
       <Text style={styles.label}>Tamanho em hectares</Text>
       <TextInput style={styles.input} value = { size }  keyboardType = "numeric"  placeholder = "Tamanho do pasto" onChangeText = { setSize } />
@@ -115,7 +128,6 @@ export default function Data() {
           setType( itemValue )
         }>
 
-          <Picker.Item label = "Escolhar o tipo" value = "null" style={styles.picker} />
           <Picker.Item label = "Braquiarão" value = "Braquiarão" style={styles.picker} />
           <Picker.Item label = "Mombaça" value = "Mombaça" style={styles.picker} />
           <Picker.Item label = "Tanzania" value = "Tanzania" style={styles.picker} />
