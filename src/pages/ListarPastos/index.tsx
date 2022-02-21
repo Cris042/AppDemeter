@@ -1,21 +1,17 @@
-import {
-    Text,
-    View,
-    ScrollView,
-} from "react-native";
-
+import { Text, View, ScrollView } from "react-native";
 import React, { useEffect,useState } from "react";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  MaterialCommunityIcons } from '@expo/vector-icons';
-import {  useNavigation } from "@react-navigation/native";
-
-import { Feather } from "@expo/vector-icons";
 import { RectButton } from "react-native-gesture-handler";
+import {  useNavigation } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
 
-import styles from "./styles";
 import api from "../../services/axios";
+import styles from "./styles";
 
-
-interface Farms {
+interface Farms 
+{
     id: number;
     name: string;
     size: number;
@@ -33,14 +29,18 @@ const CatleList: React.FC = () => {
     useEffect(() => 
     {
 
-      async function loadOrphanages() 
+      async function load() 
       {
-        const response = await api.get("picket");
+        const dataKey = '@appIF:Farm';
+        const response = await AsyncStorage.getItem( dataKey );
+ 
+        const responseFormatted = response ? JSON.parse( response ) : [];
+        const expensives = responseFormatted;
   
-        setFarms( response.data );
+        setFarms( expensives );
       }
   
-      loadOrphanages();
+      load();
 
     });
 

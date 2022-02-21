@@ -1,27 +1,25 @@
-import {
-    Text,
-    View,
-    ScrollView,
-} from "react-native";
-
+import { Text, View, ScrollView } from "react-native";
 import React, { useEffect,useState } from "react";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  MaterialCommunityIcons } from '@expo/vector-icons';
 import {  useNavigation } from "@react-navigation/native";
-
-import { Feather } from "@expo/vector-icons";
 import { RectButton } from "react-native-gesture-handler";
+import { Feather } from "@expo/vector-icons";
 
-import styles from "./styles";
 import api from "../../services/axios";
+import styles from "./styles";
 
-interface Cattle{
+
+interface Cattle
+{
     id: number;
     name: string;
     breed: string; 
     status: boolean;
     initialWeight: number; 
     Weight: number;  
-    dateOfBirth: Date;  
+    age: Date;  
     sexo: string;
 }
 
@@ -37,9 +35,13 @@ const CatleList: React.FC = () => {
 
       async function load() 
       {
-        const response = await api.get("cattle");
+        const dataKey = '@appIF:Cattle';
+        const response = await AsyncStorage.getItem( dataKey );
+ 
+        const responseFormatted = response ? JSON.parse( response ) : [];
+        const expensives = responseFormatted;
   
-        setCattle( response.data );
+        setCattle( expensives );
       }
   
       load();
@@ -70,8 +72,8 @@ const CatleList: React.FC = () => {
                             <View style = { styles.cardBory }>
                                 <Text style = { styles.textCard }> { cattle.name } </Text>  
                                 <Text style = { styles.textCard }> Raça : { cattle.breed } </Text>    
-                                <Text style = { styles.textCard }> Sexo : { cattle.sexo == "m" ? "Masculino" : "Femenino" } </Text> 
-                                <Text style = { styles.textCard }> Idade : { cattle.dateOfBirth} </Text>                 
+                                <Text style = { styles.textCard }> Sexo : { cattle.sexo == "m" ? "Macho" : "Fêmea" } </Text> 
+                                <Text style = { styles.textCard }> Idade : { cattle.age } </Text>                 
                             </View>
 
                             <Text style = { styles.btnCard }  > Editar Gado </Text>   

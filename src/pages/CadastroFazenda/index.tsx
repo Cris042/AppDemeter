@@ -4,11 +4,8 @@ import { ScrollView, Text, TextInput, View, Switch, } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { RectButton } from "react-native-gesture-handler";
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Picker } from '@react-native-picker/picker';
-import { useForm } from 'react-hook-form';
 import uuid from 'react-native-uuid';
-import * as Yup from 'yup';
 
 
 import styles from "./styles";
@@ -22,18 +19,15 @@ interface DataRouteParams
   };
 }
 
-interface Types 
+interface Farms 
 {
   id: number;
   name: string;
-  amountOffood: number;
+  size: number;
+  countFood: number;
+  latitude: number;
+  longitude: number;
 }
-
-const schema = Yup.object().shape
-({
-    name: Yup.string().min( 3, "Digite Pelo menos 3 Caracteres" ),
-    type: Yup.number().required().positive().integer(),
-});
 
 export default function Data() {
   const navigation = useNavigation();
@@ -43,18 +37,14 @@ export default function Data() {
   const [ name, setName ] = useState("");
   const [ size, setSize ] = useState("");
   const [ type, setType ] = useState("");
-  const [ types, setTypes ] = useState<Types[]>([]);
+  const [ farms , setFarms ] = useState<Farms[]>([]);
   const [ status, setStatus ] = useState( true );
 
   async function handleCreate() 
   {
       const dataKey = '@appIF:Farm';
       const { latitude, longitude } = params.position;
-
-      // const { control, handleSubmit, reset, formState: { errors } } = useForm({
-      //   resolver: yupResolver( schema )
-      // });
-
+      
       const amountOffood = 
       ( 
           type === "Braquiarão" ? 14000 : type === "Mombaça" ? 28000 : type === "Tanzania" ? 21000 : 
@@ -74,80 +64,99 @@ export default function Data() {
         id_user: String( uuid.v4() ),
       }
 
-      try 
+     
+      const response = await AsyncStorage.getItem( dataKey );
+
+      const responseFormatted = response ? JSON.parse( response ) : [];
+      const expensives = responseFormatted;
+
+      setFarms( expensives );  
+
+      const farmsExistsAlert =  farms.find( farms => farms.name ===  name );
+
+      if( size !== "" && farmsExistsAlert?.id === undefined ) 
       {
-        const data = await AsyncStorage.getItem( dataKey );
-        const currentData = data ? JSON.parse( data ) : [];
 
-        const dataFormatted = [
-          ...currentData,
-          obj
-        ];
+        try 
+        {
+          const data = await AsyncStorage.getItem( dataKey );
+          const currentData = data ? JSON.parse( data ) : [];
 
-        await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );     
-        navigation.navigate("Home" );
+          const dataFormatted = [
+            ...currentData,
+            obj
+          ];
 
-      } 
-      catch ( error ) 
+          await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );           
+          navigation.navigate("Home" );
+
+        } 
+        catch ( error ) 
+        {
+          console.log( error );
+        }
+        
+      }
+      else
       {
-         console.log( error );
+          const msn = size === "" ? "Ops! O Campo : Tamanho do pasto e Obrigatorio" : "Ops! Ja existe um pasto com esse nome";
+          alert( msn )
       }
    
   } 
 
-  useEffect( () => 
-  {
-      async function loadData() 
-      {
-        const dataKey = '@appIF:Farm';
-        const data = await AsyncStorage.getItem( dataKey );
-      }
-
-      loadData();
-
-  },[] );
-
   return (
     <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ padding: 24 }}
+      style = { styles.container }
+      contentContainerStyle = {{ padding: 24 }}
     >
-      <Text style={styles.title}>Cadastro de Pasto</Text>
+      <Text style = { styles.title }>Cadastro de Pasto</Text>
 
-      <Text style={styles.label}>Nome</Text>
-      <TextInput style={styles.input} value = { name }  placeholder = "Nome do pasto ( O nome será gerado automaticamente caso deixer o campo vazio )" onChangeText = { setName } />
+      <Text style = { styles.label}>Nome</Text>
 
-      <Text style={styles.label}>Tamanho em hectares</Text>
-      <TextInput style={styles.input} value = { size }  keyboardType = "numeric"  placeholder = "Tamanho do pasto" onChangeText = { setSize } />
+      <TextInput 
+         style = { styles.input } value = { name } 
+         placeholder = "Nome do pasto ( O nome será gerado automaticamente caso deixer o campo vazio )" 
+         onChangeText = { setName } 
+      />
 
-      <Text style={styles.label}>Tipo</Text>
+      <Text style = { styles.label }>Tamanho do Pasto ( hectares )</Text>
+
+      <TextInput 
+         style = { styles.input } value = { size }  
+         keyboardType = "numeric"  
+         placeholder = "Tamanho do pasto" 
+         onChangeText = { setSize } 
+      />
+
+      <Text style = { styles.label }>Tipo</Text>
 
       <Picker mode = "dropdown"  
         selectedValue = { type }
-        onValueChange={ ( itemValue, itemIndex ) =>
+        onValueChange = { ( itemValue, itemIndex ) =>
           setType( itemValue )
         }>
 
-          <Picker.Item label = "Braquiarão" value = "Braquiarão" style={styles.picker} />
-          <Picker.Item label = "Mombaça" value = "Mombaça" style={styles.picker} />
-          <Picker.Item label = "Tanzania" value = "Tanzania" style={styles.picker} />
-          <Picker.Item label = "Tifton" value = "Tifton" style={styles.picker} />
-          <Picker.Item label = "Colonião" value = "Colonião" style={styles.picker} />
+          <Picker.Item label = "Braquiarão" value = "Braquiarão" style = { styles.picker } />
+          <Picker.Item label = "Mombaça" value = "Mombaça" style = { styles.picker } />
+          <Picker.Item label = "Tanzania" value = "Tanzania" style = { styles.picker } />
+          <Picker.Item label = "Tifton" value = "Tifton" style = { styles.picker } />
+          <Picker.Item label = "Colonião" value = "Colonião" style = { styles.picker } />
        
       </Picker>
 
-      <View style={styles.switchContainer}>
-        <Text style={styles.label}>O pasto esta disponivel ?</Text>
+      <View style = { styles.switchContainer }>
+        <Text style = { styles.label }>O pasto esta disponivel ?</Text>
         <Switch
-          thumbColor="#fff"
-          trackColor={{ false: "#ccc", true: "#39CC83" }}
-          value={ status }
-          onValueChange={ setStatus }
+          thumbColor = "#fff"
+          trackColor = {{ false: "#ccc", true: "#39CC83" }}
+          value = { status }
+          onValueChange = { setStatus }
         />
       </View>
       
-      <RectButton style={styles.nextButton} onPress={ handleCreate }>
-        <Text style={styles.nextButtonText}>Cadastrar</Text>
+      <RectButton style = { styles.nextButton } onPress = { handleCreate }>
+        <Text style = { styles.nextButtonText }>Cadastrar</Text>
       </RectButton>
 
     </ScrollView>

@@ -89,6 +89,8 @@ export default function Map()
       {
          const dataKey = '@appIF:Farm';
          const response = await AsyncStorage.getItem( dataKey );
+        //  await AsyncStorage.removeItem( dataKey );
+        //  await AsyncStorage.removeItem('@appIF:Farm');
 
          const responseFormatted = response ? JSON.parse( response ) : [];
          const expensives = responseFormatted;
