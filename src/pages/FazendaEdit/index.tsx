@@ -1,35 +1,29 @@
-import {
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-  Switch,
-  Linking,
-} from "react-native";
-
+import { ScrollView, Text, TextInput, View, Switch, Linking } from "react-native";
 import React, { useEffect,useState } from "react";
-import MapView, { Marker } from "react-native-maps";
 
-import { RectButton } from "react-native-gesture-handler";
-import { Picker } from '@react-native-picker/picker';
-import { useRoute } from "@react-navigation/native";
-import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-import styles from "./styles";
-import api from "../../services/axios";
+import { RectButton } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
+import { Picker } from '@react-native-picker/picker';
+import MapView, { Marker } from "react-native-maps";
+import { useRoute } from "@react-navigation/native";
 
 import mapMaker from "../../images/map-marker.png";
+import api from "../../services/axios";
+import styles from "./styles";
 
-interface DetailsRouteParams {
-  id: number;
+interface DetailsRouteParams 
+{
+  id: string;
 }
 
-interface Farms {
-  id: number;
+interface Farms 
+{
+  id: string;
   name: string;
   type: string;
-  size: any;
+  size: string;
   latitude: number;
   longitude: number; 
   status: string;
@@ -40,21 +34,37 @@ export default function FazendaEdit()
   const route = useRoute();
   const navigation = useNavigation();
 
-  const [ Farm, setFarms ] = useState<Farms>();
+  const [ farms , setFarms ] = useState<Farms[]>([]);
+  const [ farm, setFarm ] = useState<Farms>();
+
 
   const params = route.params as DetailsRouteParams;
 
   useEffect(() => {
-    async function loadOrphanage() 
+
+    async function load() 
     {
-      const response = await api.get( `farms/${params.id}` );
-      setFarms( response.data );
+      const dataKey = '@appIF:Farm';
+
+      const response = await AsyncStorage.getItem( dataKey );
+
+      const responseFormatted = response ? JSON.parse( response ) : [];
+      const expensives = responseFormatted;
+
+      setFarms( expensives );  
+
+      const farmsObj =  farms.find( farms => farms.id ===  params.id );
+
+      setFarm( farmsObj );
+      
     }
 
-    loadOrphanage();
+    load();
+
+
   }, [ params.id ] );
 
-  if (!Farm) 
+  if (!farm) 
   {
     return (
       <View style = { styles.container } >
@@ -68,7 +78,7 @@ export default function FazendaEdit()
     alert("Ops!")
   } 
 
-  function handleManagePasture( id: number )
+  function handleManagePasture( id: string )
   {
      navigation.navigate("ManagePasture", { id } );
   }
@@ -78,9 +88,9 @@ export default function FazendaEdit()
       style={styles.container}
       contentContainerStyle={{ padding: 24 }}
       >
-        <Text style={styles.title}> { Farm.name } </Text>
+        <Text style={styles.title}> { farm.name } </Text>
 
-        <RectButton style={styles.button} onPress = { () => handleManagePasture( Farm.id )  }>
+        <RectButton style={styles.button} onPress = { () => handleManagePasture(  farm.id  )  }>
           <MaterialCommunityIcons name = "cog-outline" size = { 35 } color="#000" /> 
         </RectButton>
 
@@ -101,8 +111,8 @@ export default function FazendaEdit()
               <Marker
                 icon={ mapMaker }
                 coordinate={{
-                  latitude: Farm.latitude,
-                  longitude: Farm.longitude,
+                  latitude: Number( farm.latitude ),
+                  longitude: Number( farm.longitude ),
                 }}
               />
 
@@ -110,23 +120,22 @@ export default function FazendaEdit()
         </View>
 
         <Text style={styles.label}>Nome</Text>
-        <TextInput style={styles.input} value = { Farm.name } placeholder = "Nome do pasto ( Minimo 3 letras )"  />
+        <TextInput style={styles.input} value = { farm.name } placeholder = "Nome do pasto ( Minimo 3 letras )"  />
 
         <Text style={styles.label}>Tamanho em hectares</Text>
-        <TextInput style={styles.input} value = "123"  keyboardType = "numeric"  placeholder = "Tamanho do pasto" />
+        <TextInput style={styles.input} value = { farm.size }  keyboardType = "numeric"  placeholder = "Tamanho do pasto" />
 
         <Text style={styles.label}>Tipo</Text>
 
         <Picker mode = "dropdown"  >
-          <Picker.Item  label="0p 01" value= { Farm.type } style={styles.picker} />
-          <Picker.Item  label="Op 01" value="java" style={styles.picker} />
-          <Picker.Item  label="Op 02" value="js" style={styles.picker} />
+          <Picker.Item  label = { farm.type } value = {  farm.type } style = {styles.picker} />
         </Picker>
 
         <View style={styles.switchContainer}>
           <Text style={styles.label}>O pasto esta disponivel ?</Text>
           <Switch
             thumbColor="#fff"
+            value = { true }
             trackColor={{ false: "#ccc", true: "#39CC83" }}
           />
         </View>

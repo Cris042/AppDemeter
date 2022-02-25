@@ -1,46 +1,45 @@
-import {
-    Text,
-    View,
-    ScrollView,
-} from "react-native";
+import { Text, View, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
 
-import React, { useEffect,useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  MaterialCommunityIcons } from '@expo/vector-icons';
 import {  useNavigation } from "@react-navigation/native";
-
-import { Feather } from "@expo/vector-icons";
 import { RectButton } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
 
-import styles from "./styles";
 import api from "../../services/axios";
-
-interface DetailsRouteParams {
-    id: number;
+import styles from "./styles";
+interface DetailsRouteParams 
+{
+    id: string;
 }
 
-interface PickedUsed{
-    id: number;
+interface PickedUsed
+{
+    id: string;
     dateEntryPicket: String,
     dateExitPicket: String,
-    picketID : number,
+    picketID : string,
     cattleID : string,
     occupancyRate : number,
 }
 
-interface Cattle{
-    id: number;
+interface Cattle
+{
+    id: string;
     name: string;
     breed: string; 
     status: boolean;
     initialWeight: number; 
-    Weight: number;  
+    weight: number;  
     dateOfBirth: Date;  
     sexo: string;
 }
 
-interface Farms {
-    id: number;
+interface Farms 
+{
+    id: string;
     name: string;
     size: number;
     countFood: number;
@@ -53,7 +52,7 @@ const ManagePasture: React.FC = () => {
     const route = useRoute();
     const navigation = useNavigation();
 
-    const [ picket , setPicket ] = useState<PickedUsed[]>([]);
+    const [ picketUsed , setPicketUsed ] = useState<PickedUsed[]>([]);
     const [ cattle , setCattle ] = useState<Cattle[]>([]);
     const [ farms , setFarms ] = useState<Farms[]>([]);
 
@@ -64,50 +63,52 @@ const ManagePasture: React.FC = () => {
 
     useEffect(() => 
     {
-
-      async function load() 
-      {
-        const response = await api.get("picketUsed");
-     
-        setPicket( response.data );
-      }
-  
-      load();
-
-    });
-
-    useEffect(() => 
-    {
-  
-      async function loadCattle() 
-      {
-        const response = await api.get("cattle");
-  
-        setCattle( response.data );
-      }
-  
-      loadCattle();
-  
-    }, []);
-
-
-    useEffect(() => 
-    {
   
       async function loadPiket() 
       {
-        const response = await api.get("picket");
-  
-        setFarms( response.data );
+         const responseFarm = await AsyncStorage.getItem( '@appIF:Farm' );
+
+         const responseFormattedFarm = responseFarm ? JSON.parse( responseFarm ) : [];
+         const expensivesFarm = responseFormattedFarm;
+
+         setFarms( expensivesFarm );  
+      }
+
+      async function loadCattle() 
+      {
+         const responseCattle = await AsyncStorage.getItem( '@appIF:Cattle' );
+
+         const responseFormattedCattle = responseCattle ? JSON.parse( responseCattle ) : [];
+         const expensivesCattle = responseFormattedCattle;
+
+         setCattle( expensivesCattle );
+      }
+
+      async function loadPicketUsed() 
+      {
+         const responsePicketUsed = await AsyncStorage.getItem( '@appIF:PicketUsed' );
+
+         const responseFormattedPicketUsed = responsePicketUsed ? JSON.parse( responsePicketUsed ) : [];
+         const expensivesPicketUsed = responseFormattedPicketUsed;
+
+         setPicketUsed( expensivesPicketUsed );
       }
   
+      loadPicketUsed();
+      loadCattle();
       loadPiket();
   
     }, []);
 
+
     function handleNavigatCattleList()
     {
         alert( "ops!");
+    }
+
+    function handleDeletCattleList()
+    {
+        alert( "ops!!");
     }
 
 
@@ -118,13 +119,13 @@ const ManagePasture: React.FC = () => {
 
             <ScrollView style= { styles.scroll } >
 
-                { picket.map(( picket ) => 
+                { picketUsed.map(( picket ) => 
                 {
-                    if( picket.picketID === params.id )
+                    if( picket.picketID ===  params.id )
                     {
                         count++; 
-                        const cattkeObj =  cattle.find( cattle => cattle.name === picket.cattleID );
-                        const picketObj =  farms.find( farms => farms.id === picket.picketID );
+                        const cattkeObj =  cattle.find( cattle => cattle.id === picket.cattleID );
+                        const picketObj =  farms.find( farms =>   farms.id  === picket.picketID );
 
                         let sizePicket = picketObj?.size != null ? picketObj?.size : 0;
 
@@ -139,10 +140,13 @@ const ManagePasture: React.FC = () => {
                                     <Text style = { styles.textCard }> Nome : { cattkeObj?.name } </Text>  
                                     <Text style = { styles.textCard }> Sexo : { cattkeObj?.sexo  == "m" ? "Masculino" : "Femenino" } </Text>         
                                     <Text style = { styles.textCard }> Raça : { cattkeObj?.breed } </Text>    
-                                    <Text style = { styles.textCard }> Peso : { cattkeObj?.Weight } </Text>                             
+                                    <Text style = { styles.textCard }> Peso : { cattkeObj?.weight } ( kg ) </Text>                             
                                 </View>
 
-                                <Text style = { styles.btnCard }  > Remover </Text>   
+                                <RectButton style = { styles.btnCard } onPress = { handleDeletCattleList  }>
+                                    <Text style = { styles.btnCardTxt }> Remover </Text>
+                                </RectButton>
+
                             </View>
                         );   
                     }
@@ -153,7 +157,7 @@ const ManagePasture: React.FC = () => {
             <View style={styles.footer}>
 
                 <Text style={styles.footerText}>
-                    {  count } Gados(s) encontrado(s)
+                    { count } Gados(s) encontrado(s)
                 </Text>
 
                 <RectButton

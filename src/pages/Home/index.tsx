@@ -8,13 +8,14 @@ import * as Location from "expo-location";
 
 import {  useFocusEffect, useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from "@react-native-community/netinfo";
 import mapMaker from "../../images/map-marker.png";
 
 import styles from "./styles";
 import api from "../../services/axios";
 import { RectButton } from "react-native-gesture-handler";
 
-import NetInfo from "@react-native-community/netinfo";
+
 
 interface Farms 
 {
@@ -78,7 +79,18 @@ export default function Map()
 
       }
 
+      async function loadPicketUsed() 
+      {
+          const responsePickedUsed = await AsyncStorage.getItem( '@appIF:PicketUsed' );
+
+          const responseFormattedPickedUsed = responsePickedUsed ? JSON.parse( responsePickedUsed ) : [];
+          const expensivesPickedUsed = responseFormattedPickedUsed;
+
+          setPicketUsed( expensivesPickedUsed );
+      }
+
       loadPosition();
+      loadPicketUsed();
 
     }, []);
 
@@ -89,8 +101,9 @@ export default function Map()
       {
          const dataKey = '@appIF:Farm';
          const response = await AsyncStorage.getItem( dataKey );
-        //  await AsyncStorage.removeItem( dataKey );
+        //  await AsyncStorage.removeItem('@appIF:Cattle');
         //  await AsyncStorage.removeItem('@appIF:Farm');
+        //  await AsyncStorage.removeItem('@appIF:PicketUsed');
 
          const responseFormatted = response ? JSON.parse( response ) : [];
          const expensives = responseFormatted;
@@ -99,14 +112,7 @@ export default function Map()
 
       }
 
-      async function loadPicketUsed() 
-      {
-         // const picketUsedCount = ;   
-         // setPicketUsed( picketUsedCount.data );
-      }
-      
       loadFarms();
-      loadPicketUsed();
       
     });
 

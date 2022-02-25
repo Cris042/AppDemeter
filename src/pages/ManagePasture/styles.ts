@@ -74,10 +74,15 @@ export default StyleSheet.create({
 
   btnCard: {
     textAlign: "center",
+    marginLeft: "45%",
     color: "#27b844",
     fontSize: 16,
     marginTop: -40,
     marginRight: -50,
+  },
+
+  btnCardTxt: {
+    color: "#27b844",
   },
 
   footer: {

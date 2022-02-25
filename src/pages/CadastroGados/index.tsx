@@ -38,6 +38,17 @@ interface Cattle
   dateOfBirth: Date;  
 }
 
+interface PickedUsed
+{
+    id: number;
+    dateEntryPicket: String,
+    dateExitPicket: String,
+    picketID : number,
+    cattleID : string,
+    occupancyRate : number,
+}
+
+
 export default function Data() {
 
   const dataKey = '@appIF:Cattle';
@@ -45,8 +56,8 @@ export default function Data() {
   const route = useRoute();
   
   const [ name, setName ] = useState("");
-  const [ count, setCount ] = useState("");
-  const [ breed, setBreed ] = useState("3285");
+  const [ count, setCount ] = useState(" ");
+  const [ breed, setBreed ] = useState("Nelore");
   const [ status, setStatus ] = useState("a");
   const [ weight, setWeight ] = useState("");
   const [ purchaseValue, setPurchaseValue ] = useState("");
@@ -60,7 +71,6 @@ export default function Data() {
  
   const [ farms , setFarms ] = useState<Farms[]>([]);
   const [ cattle , setCattle ] = useState<Cattle[]>([]);
-
   
   useEffect(() => 
   {
@@ -92,12 +102,54 @@ export default function Data() {
   }, []);
 
 
-  async function handleCreate() 
+  async function handleCreatePicketUsed( objPicketUsed = [{}] )
+  {
+      var dataPicketUsed = await AsyncStorage.getItem( '@appIF:PicketUsed' );
+      var currentDataPicketUsed = dataPicketUsed ? JSON.parse( dataPicketUsed ) : [];
+      var dataFormattedPicketUsed = [];
+
+      try 
+      {  
+          dataFormattedPicketUsed = [
+            ...currentDataPicketUsed,
+            ...objPicketUsed
+          ];
+
+          await AsyncStorage.setItem( '@appIF:PicketUsed' , JSON.stringify( dataFormattedPicketUsed ) );    
+      
+      } 
+      catch ( error ) 
+      {
+          console.log( error );
+      }
+  }
+
+  async function handleCreate( obj = [{}] )
+  {
+      var data = await AsyncStorage.getItem( dataKey );
+      var currentData = data ? JSON.parse( data ) : [];
+      var dataFormatted = [];
+
+      try 
+      {  
+          dataFormatted = [
+            ...currentData,
+            ...obj
+          ];
+          
+          await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );    
+      
+      } 
+      catch ( error ) 
+      {
+          console.log( error );
+      }
+  }
+
+  async function handle() 
   {
 
-    const nameCattle = ( name === "" ? breed +  Math.floor( Math.random() * 10000 + 256 ) : name );
-
-    const typePiquet =  farms.find( farms => farms.id === parseInt( farm ) );
+    const typePiquet =  farms.find( farms => farms.name ===  farm  );
     const amountOffood = typePiquet?.countFood;
 
     const consumptionBreed = 
@@ -107,46 +159,52 @@ export default function Data() {
     );
   
     const occupancyRate =  ( amountOffood != null ? amountOffood : 0 ) / ( consumptionBreed != null ? consumptionBreed : 0 );
+    const aux = count === " " ? 1 : parseInt( count );
 
-    const obj = 
+    var obj = [{}];
+    var picketUsed = [{}];
+
+    for ( let i = 0; i < aux; i++ ) 
     {
-      id: String( uuid.v4() ),
-      name: String( nameCattle ),
-      breed: String( breed ),
-      status:  String( status ),
-      initialWeight:  String( weight ),
-      weight:  String( weight ),
-      purchaseValue:  String( purchaseValue === "" ? "0" : purchaseValue ),
-      datePurchase: String( datePurchase === "" ? age : datePurchase ),
-      age: String( age ),
-      sex: String( sex ),
-      node:  String( node ),
-      earring : String( earring ),
-      matriz: String( matriz ),
-      const:  String( count ),
-      farm: String( farm ),
-      occupancyRate: String( occupancyRate.toFixed( 1 ) ),
-      id_user: String( uuid.v4() ),
+        var nameCattle = ( name === "" ? breed + Math.floor( Math.random() * 10000 + 256 ) : name );
+        var id = String( uuid.v4() );
+        var idPicketUsed = String( uuid.v4() );
+
+        obj = 
+        [{
+          id: id,
+          name: String( nameCattle ),
+          breed: String( breed ),
+          status:  String( status ),
+          initialWeight:  String( weight ),
+          weight:  String( weight ),   
+          purchaseValue:  String( purchaseValue === "" ? "0" : purchaseValue ),
+          datePurchase: String( datePurchase === "" ? age : datePurchase ),
+          age: String( age ),
+          sex: String( sex ),
+          node:  String( node ),
+          earring : String( earring ),
+          matriz: String( matriz ),
+          farm: String( typePiquet?.id ),
+          occupancyRate: String( occupancyRate.toFixed( 1 ) ),
+          id_user: String( uuid.v4() ),
+        }]
+
+        picketUsed = 
+        [{
+          id: idPicketUsed,
+          dateEntryPicket: new Date().toLocaleDateString(),
+          dateExitPicket: null,
+          picketID : typePiquet?.id,
+          cattleID : id,
+          occupancyRate : occupancyRate.toFixed( 1 ),
+        }]
     }
 
-    try 
-    {
-      const data = await AsyncStorage.getItem( dataKey );
-      const currentData = data ? JSON.parse( data ) : [];
+    handleCreate( obj );
+    handleCreatePicketUsed( picketUsed );
 
-      const dataFormatted = [
-        ...currentData,
-        obj
-      ];
-
-      await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );           
-      navigation.navigate("ListarGados" );
-
-    } 
-    catch ( error ) 
-    {
-       console.log( error );
-    }
+    navigation.navigate("ListarGados" );
   
   } 
 
@@ -287,7 +345,7 @@ export default function Data() {
           { farms.map(( farm ) => 
           {
               return (
-                <Picker.Item key = { farm.id } style={styles.picker}  label = { farm.name } value = { farm.id } />
+                <Picker.Item key = { farm.id } style ={ styles.picker}  label = { farm.name } value = { farm.name } />
               );
           })}
         
@@ -320,12 +378,12 @@ export default function Data() {
           setBreed( itemValue )
         }>
 
-         <Picker.Item label = "Nelore" value = "3285" />
-         <Picker.Item label = "Holandês" value = "5475" />
-         <Picker.Item label = "Guzerá" value = "5110" />
-         <Picker.Item label = "Girolando" value = "3358" />
-         <Picker.Item label = "Brahman" value = "5657" />
-         <Picker.Item label = "Jersey" value = "4124" />
+         <Picker.Item label = "Nelore" value = "Nelore" />
+         <Picker.Item label = "Holandês" value = "Holandês" />
+         <Picker.Item label = "Guzerá" value = "Guzerá" />
+         <Picker.Item label = "Girolando" value = "Girolando" />
+         <Picker.Item label = "Brahman" value = "Brahman" />
+         <Picker.Item label = "Jersey" value = "Jersey" />
 
       </Picker>
 
@@ -358,7 +416,7 @@ export default function Data() {
         
       </Picker>
  
-      <RectButton style={styles.nextButton} onPress={ handleCreate }>
+      <RectButton style={styles.nextButton} onPress={ handle }>
         <Text style={styles.nextButtonText}>Cadastrar</Text>
       </RectButton>
 

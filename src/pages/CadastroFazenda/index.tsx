@@ -44,6 +44,16 @@ export default function Data() {
   {
       const dataKey = '@appIF:Farm';
       const { latitude, longitude } = params.position;
+
+        
+      const response = await AsyncStorage.getItem( dataKey );
+
+      const responseFormatted = response ? JSON.parse( response ) : [];
+      const expensives = responseFormatted;
+
+      setFarms( expensives );  
+
+      const farmsExistsAlert =  farms.find( farms => farms.name ===  name );
       
       const amountOffood = 
       ( 
@@ -63,16 +73,6 @@ export default function Data() {
         status: String( status ),
         id_user: String( uuid.v4() ),
       }
-
-     
-      const response = await AsyncStorage.getItem( dataKey );
-
-      const responseFormatted = response ? JSON.parse( response ) : [];
-      const expensives = responseFormatted;
-
-      setFarms( expensives );  
-
-      const farmsExistsAlert =  farms.find( farms => farms.name ===  name );
 
       if( size !== "" && farmsExistsAlert?.id === undefined ) 
       {
