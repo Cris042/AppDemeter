@@ -170,8 +170,8 @@ export default function Data() {
         var id = String( uuid.v4() );
         var idPicketUsed = String( uuid.v4() );
 
-        obj = 
-        [{
+        obj[ i ] = 
+        {
           id: id,
           name: String( nameCattle ),
           breed: String( breed ),
@@ -188,17 +188,17 @@ export default function Data() {
           farm: String( typePiquet?.id ),
           occupancyRate: String( occupancyRate.toFixed( 1 ) ),
           id_user: String( uuid.v4() ),
-        }]
+        }
 
-        picketUsed = 
-        [{
+        picketUsed[ i ] = 
+        {
           id: idPicketUsed,
           dateEntryPicket: new Date().toLocaleDateString(),
           dateExitPicket: null,
           picketID : typePiquet?.id,
           cattleID : id,
           occupancyRate : occupancyRate.toFixed( 1 ),
-        }]
+        }
     }
 
     handleCreate( obj );

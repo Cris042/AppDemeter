@@ -20,7 +20,7 @@
       dateExitPicket: String;
 
       @Column()
-      picketID: number;
+      picketID: String;
 
       @Column( )
       cattleID: string;

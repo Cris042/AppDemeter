@@ -28,7 +28,7 @@ export class PicketUsed1617143008765 implements MigrationInterface {
 
                 {
                     name: 'picketID',
-                    type: 'integer',
+                    type: 'varchar',
                 },
 
                 {

@@ -89,14 +89,6 @@ export default function Map()
           setPicketUsed( expensivesPickedUsed );
       }
 
-      loadPosition();
-      loadPicketUsed();
-
-    }, []);
-
-    useFocusEffect(() => 
-    {
-
       async function loadFarms() 
       {
          const dataKey = '@appIF:Farm';
@@ -113,8 +105,10 @@ export default function Map()
       }
 
       loadFarms();
-      
-    });
+      loadPosition();
+      loadPicketUsed();
+
+    }, [ farms ]);
 
     async function backup() 
     {

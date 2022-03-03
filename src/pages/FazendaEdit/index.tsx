@@ -1,5 +1,6 @@
 import { ScrollView, Text, TextInput, View, Switch, Linking } from "react-native";
-import React, { useEffect,useState } from "react";
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useEffect, useState } from "react";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -37,32 +38,38 @@ export default function FazendaEdit()
   const [ farms , setFarms ] = useState<Farms[]>([]);
   const [ farm, setFarm ] = useState<Farms>();
 
-
   const params = route.params as DetailsRouteParams;
 
-  useEffect(() => {
+  useFocusEffect(() =>
+  {
 
-    async function load() 
+    async function load()
     {
       const dataKey = '@appIF:Farm';
-
       const response = await AsyncStorage.getItem( dataKey );
 
       const responseFormatted = response ? JSON.parse( response ) : [];
       const expensives = responseFormatted;
 
       setFarms( expensives );  
-
-      const farmsObj =  farms.find( farms => farms.id ===  params.id );
-
-      setFarm( farmsObj );
-      
     }
 
     load();
 
+  });
 
-  }, [ params.id ] );
+  useEffect(() => 
+  {
+
+    async function load() 
+    { 
+      const farmsObj =  farms.find( farms => farms.id === params.id );
+      setFarm( farmsObj );   
+    }
+
+    load();
+
+  }, [ farms ] );
 
   if (!farm) 
   {
