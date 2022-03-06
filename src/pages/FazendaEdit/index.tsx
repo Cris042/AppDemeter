@@ -38,6 +38,7 @@ export default function FazendaEdit()
   const [ farms , setFarms ] = useState<Farms[]>([]);
   const [ farm, setFarm ] = useState<Farms>();
 
+  const [ initialPosition, setInitialPosition ] = useState({ latitude: 0, longitude: 0 });
   const params = route.params as DetailsRouteParams;
 
   useFocusEffect(() =>
@@ -64,12 +65,17 @@ export default function FazendaEdit()
     async function load() 
     { 
       const farmsObj =  farms.find( farms => farms.id === params.id );
+      const latitude = Number( farmsObj?.latitude );
+      const longitude = Number( farmsObj?.longitude );
+
+      setInitialPosition( { latitude, longitude } );
       setFarm( farmsObj );   
     }
 
     load();
 
   }, [ farms ] );
+  
 
   if (!farm) 
   {
@@ -103,17 +109,19 @@ export default function FazendaEdit()
 
         <View style={styles.mapView}>
           <MapView
-              initialRegion={{
-                latitude: -16.81508090497519,
-                longitude: -48.02909970297907,
+              region={{
+                latitude:  initialPosition.latitude ,
+                longitude: initialPosition.longitude ,
                 latitudeDelta: 0.008,
                 longitudeDelta: 0.008,
               }}
-              zoomEnabled={false}
-              pitchEnabled={false}
-              scrollEnabled={false}
-              rotateEnabled={false}
-              style={ styles.map }
+
+              zoomEnabled = { false }
+              pitchEnabled = { false }
+              scrollEnabled = { false }
+              rotateEnabled = { false }
+              style = { styles.map }
+
             >
               <Marker
                 icon={ mapMaker }

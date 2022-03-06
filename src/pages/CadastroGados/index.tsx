@@ -5,11 +5,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { RectButton } from "react-native-gesture-handler";
 import { TextInputMask } from 'react-native-masked-text';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Picker } from '@react-native-picker/picker';
-import  DatePicker  from 'react-native-datepicker'
+import  DatePicker  from 'react-native-datepicker';
+import { useForm } from 'react-hook-form';
 import uuid from 'react-native-uuid';
+import * as Yup from 'yup';
 
-import api from "../../services/axios";
 import styles from "./styles";
 
 interface Breed
@@ -36,6 +38,7 @@ interface Cattle
   initialWeight: number; 
   Weight: number;  
   dateOfBirth: Date;  
+  earring: number;
 }
 
 interface PickedUsed
@@ -99,7 +102,7 @@ export default function Data() {
     loadPiket();
     loadCattle();
 
-  }, []);
+  }, [ cattle ]);
 
 
   async function handleCreatePicketUsed( objPicketUsed = [{}] )
@@ -161,51 +164,67 @@ export default function Data() {
     const occupancyRate =  ( amountOffood != null ? amountOffood : 0 ) / ( consumptionBreed != null ? consumptionBreed : 0 );
     const aux = count === " " ? 1 : parseInt( count );
 
-    var obj = [{}];
-    var picketUsed = [{}];
+    const cattleExistsAlert =  cattle.find( cattle => cattle.name ===  name );
+    const cattleEarringExistsAlert = cattle.find( cattle => cattle.earring == Number( earring ) );
 
-    for ( let i = 0; i < aux; i++ ) 
+    if( ( weight !== "" && age !== "" ) && ( cattleExistsAlert === undefined ) && ( cattleEarringExistsAlert === undefined ) )
     {
-        var nameCattle = ( name === "" ? breed + Math.floor( Math.random() * 10000 + 256 ) : name );
-        var id = String( uuid.v4() );
-        var idPicketUsed = String( uuid.v4() );
 
-        obj[ i ] = 
-        {
-          id: id,
-          name: String( nameCattle ),
-          breed: String( breed ),
-          status:  String( status ),
-          initialWeight:  String( weight ),
-          weight:  String( weight ),   
-          purchaseValue:  String( purchaseValue === "" ? "0" : purchaseValue ),
-          datePurchase: String( datePurchase === "" ? age : datePurchase ),
-          age: String( age ),
-          sex: String( sex ),
-          node:  String( node ),
-          earring : String( earring ),
-          matriz: String( matriz ),
-          farm: String( typePiquet?.id ),
-          occupancyRate: String( occupancyRate.toFixed( 1 ) ),
-          id_user: String( uuid.v4() ),
-        }
+      var obj = [{}];
+      var picketUsed = [{}];
 
-        picketUsed[ i ] = 
-        {
-          id: idPicketUsed,
-          dateEntryPicket: new Date().toLocaleDateString(),
-          dateExitPicket: null,
-          picketID : typePiquet?.id,
-          cattleID : id,
-          occupancyRate : occupancyRate.toFixed( 1 ),
-        }
+      for ( let i = 0; i < aux; i++ ) 
+      {
+          var nameCattle = ( name === "" ? breed + Math.floor( Math.random() * 10000 + 256 ) : name );
+          var id = String( uuid.v4() );
+          var idPicketUsed = String( uuid.v4() );
+
+          obj[ i ] = 
+          {
+            id: id,
+            name: String( nameCattle ),
+            breed: String( breed ),
+            status:  String( status ),
+            initialWeight:  String( weight ),
+            weight:  String( weight ),   
+            purchaseValue:  String( purchaseValue === "" ? "0" : purchaseValue ),
+            datePurchase: String( datePurchase === "" ? age : datePurchase ),
+            age: String( age ),
+            sex: String( sex ),
+            node:  String( node ),
+            earring : String( earring ),
+            matriz: String( matriz ),
+            farm: String( typePiquet?.id ),
+            occupancyRate: String( occupancyRate.toFixed( 1 ) ),
+            id_user: String( uuid.v4() ),
+          }
+
+          picketUsed[ i ] = 
+          {
+            id: idPicketUsed,
+            dateEntryPicket: new Date().toLocaleDateString(),
+            dateExitPicket: null,
+            picketID : typePiquet?.id,
+            cattleID : id,
+            occupancyRate : occupancyRate.toFixed( 1 ),
+          }
+      }
+
+    
+      handleCreate( obj );
+      handleCreatePicketUsed( picketUsed );
+
+      navigation.navigate("ListarGados" );
+
     }
-
-    handleCreate( obj );
-    handleCreatePicketUsed( picketUsed );
-
-    navigation.navigate("ListarGados" );
-  
+    else
+      alert
+      (
+          weight === "" || age === "" ? "Ops! O Campos Obrigatorio não foram preenchidos" : 
+          cattleEarringExistsAlert !== undefined ? "Ops! Ja existe um animal com esse brinco"
+          : "Ops! Ja existe um animal com esse nome" 
+      );
+    
   } 
 
   return (

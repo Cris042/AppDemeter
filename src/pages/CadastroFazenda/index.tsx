@@ -7,7 +7,6 @@ import { RectButton } from "react-native-gesture-handler";
 import { Picker } from '@react-native-picker/picker';
 import uuid from 'react-native-uuid';
 
-
 import styles from "./styles";
 
 interface DataRouteParams 
@@ -29,7 +28,9 @@ interface Farms
   longitude: number;
 }
 
-export default function Data() {
+export default function Data() 
+{
+  const dataKey = '@appIF:Farm';
   const navigation = useNavigation();
   const route = useRoute();
   const params = route.params as DataRouteParams;
@@ -37,34 +38,66 @@ export default function Data() {
   const [ name, setName ] = useState("");
   const [ size, setSize ] = useState("");
   const [ type, setType ] = useState("");
-  const [ farms , setFarms ] = useState<Farms[]>([]);
   const [ status, setStatus ] = useState( true );
+
+  const [ farms , setFarms ] = useState<Farms[]>([]);
+
+  useEffect(() => 
+  {
+
+      async function loadPiket() 
+      {
+        const response = await AsyncStorage.getItem( dataKey );
+
+        const responseFormatted = response ? JSON.parse( response ) : [];
+        const expensives = responseFormatted;
+
+        setFarms( expensives );  
+      }
+
+    loadPiket();
+
+  }, [ farms ]);
+
+  async function handleCreateFarm( obj = {} )
+  {
+      try 
+      {
+        const data = await AsyncStorage.getItem( dataKey );
+        const currentData = data ? JSON.parse( data ) : [];
+
+        const dataFormatted = [
+          ...currentData,
+          obj
+        ];
+
+        await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );           
+        navigation.navigate("Home" );
+
+      } 
+      catch ( error ) 
+      {
+        console.log( error );
+      }
+
+  }
 
   async function handleCreate() 
   {
-      const dataKey = '@appIF:Farm';
-      const { latitude, longitude } = params.position;
-
-        
-      const response = await AsyncStorage.getItem( dataKey );
-
-      const responseFormatted = response ? JSON.parse( response ) : [];
-      const expensives = responseFormatted;
-
-      setFarms( expensives );  
-
-      const farmsExistsAlert =  farms.find( farms => farms.name ===  name );
-      
       const amountOffood = 
       ( 
           type === "Braquiarão" ? 14000 : type === "Mombaça" ? 28000 : type === "Tanzania" ? 21000 : 
           type === "Tifton" ? 12600 : type === "Colonião" ? 12600 : 14000
       );
 
+      const { latitude, longitude } = params.position; 
+      const nameFarm = name === "" ? "Pasto " + Math.floor( Math.random() * 1000 + 256 ) : name;
+      const farmsExistsAlert =  farms.find( farms => farms.name ===  name );
+
       const obj = 
       {
         id: String( uuid.v4() ),
-        name: name === "" ? "Pasto " + Math.floor( Math.random() * 1000 + 256 ) : name ,
+        name:  nameFarm,
         countFood: String( amountOffood ),
         type: type === "" ? "Braquiarão" : String( type ),
         size: String( size ),
@@ -74,34 +107,11 @@ export default function Data() {
         id_user: String( uuid.v4() ),
       }
 
-      if( size !== "" && farmsExistsAlert?.id === undefined ) 
-      {
-
-        try 
-        {
-          const data = await AsyncStorage.getItem( dataKey );
-          const currentData = data ? JSON.parse( data ) : [];
-
-          const dataFormatted = [
-            ...currentData,
-            obj
-          ];
-
-          await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );           
-          navigation.navigate("Home" );
-
-        } 
-        catch ( error ) 
-        {
-          console.log( error );
-        }
-        
-      }
+      if( size !== "" && farmsExistsAlert?.id === undefined )       
+         handleCreateFarm( obj );
       else
-      {
-          const msn = size === "" ? "Ops! O Campo : Tamanho do pasto e Obrigatorio" : "Ops! Ja existe um pasto com esse nome";
-          alert( msn )
-      }
+         alert( size === "" ? "Ops! O Campo : Tamanho do pasto e Obrigatorio" : "Ops! Ja existe um pasto com esse nome" );
+        
    
   } 
 

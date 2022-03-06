@@ -1,33 +1,37 @@
-import React, { useState } from "react";
 import { View, Text } from "react-native";
+import React, { useState } from "react";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { RectButton } from "react-native-gesture-handler";
 import MapView, { MapEvent, Marker } from "react-native-maps";
+import { RectButton } from "react-native-gesture-handler";
 
 import mapMarkerImg from "../../images/map-marker.png";
 import styles from "./styles";
 
-interface SelectMapPositionRouteParams {
+interface SelectMapPositionRouteParams 
+{
   initialPosition: {
     latitude: number;
     longitude: number;
   };
 }
 
-export default function SelectMapPosition() {
+export default function SelectMapPosition() 
+{
   const route = useRoute();
   const params = route.params as SelectMapPositionRouteParams;
 
   const navigation = useNavigation();
-  const [position, setPostition] = useState({ latitude: 0, longitude: 0 });
+  const [ position, setPostition ] = useState({ latitude: 0, longitude: 0 });
 
-  function handleNextStep() {
+  function handleNextStep() 
+  {
     navigation.navigate("CadastroFazenda", { position });
   }
 
-  function handleSelectedMapPosition(event: MapEvent) {
-    setPostition(event.nativeEvent.coordinate);
+  function handleSelectedMapPosition( event: MapEvent ) 
+  {
+    setPostition( event.nativeEvent.coordinate );
   }
 
   return (

@@ -6,16 +6,14 @@ import * as Progress from 'react-native-progress';
 import { Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
 
-import {  useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RectButton } from "react-native-gesture-handler";
 import NetInfo from "@react-native-community/netinfo";
 import mapMaker from "../../images/map-marker.png";
 
 import styles from "./styles";
 import api from "../../services/axios";
-import { RectButton } from "react-native-gesture-handler";
-
-
 
 interface Farms 
 {
@@ -39,21 +37,15 @@ interface PickedUsed
 export default function Map() 
 {
     const navigation = useNavigation();
+
+    const [ initialPosition, setInitialPosition ] = useState({ latitude: 0, longitude: 0, });
+    const [ backupEf , setBackupEf ] = useState( false );
+    const dataKey = '@appIF:Farm';
+    let count = 0;
+
     const [ farms , setFarms ] = useState<Farms[]>([]);
     const [ pickedUsed , setPicketUsed ] = useState<PickedUsed[]>([]);
-    const [ backupEf , setBackupEf ] = useState( false );
      
-    const [ initialPosition, setInitialPosition ] = useState
-    ({
-
-       // latitude: -16.8175022,
-       // longitude: -48.0406095,
-       latitude: 0,
-       longitude: 0,
-
-    });
-
-    let count = 0;
 
     useEffect(() => 
     {
@@ -91,11 +83,8 @@ export default function Map()
 
       async function loadFarms() 
       {
-         const dataKey = '@appIF:Farm';
+    
          const response = await AsyncStorage.getItem( dataKey );
-        //  await AsyncStorage.removeItem('@appIF:Cattle');
-        //  await AsyncStorage.removeItem('@appIF:Farm');
-        //  await AsyncStorage.removeItem('@appIF:PicketUsed');
 
          const responseFormatted = response ? JSON.parse( response ) : [];
          const expensives = responseFormatted;
@@ -104,6 +93,14 @@ export default function Map()
 
       }
 
+      async function delet( )
+      {
+         await AsyncStorage.removeItem('@appIF:Cattle');
+         await AsyncStorage.removeItem('@appIF:Farm');
+         await AsyncStorage.removeItem('@appIF:PicketUsed');
+      }
+
+      // delet();
       loadFarms();
       loadPosition();
       loadPicketUsed();
@@ -189,7 +186,8 @@ export default function Map()
                         { count != 0 ? count.toFixed( 1 ) : 0 } de { "" } 
                         { farm.size }
                       </Text>
-                      <Progress.Bar  progress={ count != 0 ? count  * 0.10 : 0 } width = { 180 }  color="#3FC71D" /> 
+                      <Progress.Bar progress = { count != 0 ? ( ( count / farm.size ) * 100 ) /100 : 0 } width = { 180 } color = { count <= farm.size ? "#3FC71D" : "#FA2B22" } />
+                      <Text style = { styles.calloutText } > { ( count != 0 ? (  count / farm.size ) * 100 : 0 ).toFixed( 1 ) } % </Text> 
                     </View>
 
                 </Callout>

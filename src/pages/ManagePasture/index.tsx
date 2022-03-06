@@ -8,7 +8,6 @@ import { RectButton } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
-import api from "../../services/axios";
 import styles from "./styles";
 interface DetailsRouteParams 
 {
@@ -135,8 +134,7 @@ const ManagePasture: React.FC = () => {
                                     <MaterialCommunityIcons name = "cow" size={50} color="#000" /> 
                                 </View>
 
-                                <View style = { styles.cardBory }>
-                                    <Text style = { styles.textCard }> Taxa de Ocupaçao : { ( 100 / ( sizePicket / ( 1 / picket.occupancyRate ) )  ).toFixed( 1 ) }% </Text>         
+                                <View style = { styles.cardBory }>   
                                     <Text style = { styles.textCard }> Nome : { cattkeObj?.name } </Text>  
                                     <Text style = { styles.textCard }> Sexo : { cattkeObj?.sexo  == "m" ? "Masculino" : "Femenino" } </Text>         
                                     <Text style = { styles.textCard }> Raça : { cattkeObj?.breed } </Text>    
