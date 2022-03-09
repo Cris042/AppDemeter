@@ -17,6 +17,7 @@ import ListarGados from '../../pages/ListarGados';
 import ListarPastos from '../../pages/ListarPastos';
 import CadastarGados from '../../pages/CadastroGados';
 import ManagePasture from '../../pages/ManagePasture';
+import AddCattle from '../../pages/AddCattle';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -30,7 +31,7 @@ const Menu: React.FC = () => {
                     style: 
                     {
                         height: "9%",
-                        width: "285%",
+                        width: "310%",
                         paddingLeft: 25,
                         backgroundColor: colors.menu,
                         borderTopWidth: 0,
@@ -199,6 +200,17 @@ const Menu: React.FC = () => {
                  <Screen
                     name="ManagePasture"
                     component={ ManagePasture }
+                    options={{
+
+                        tabBarVisible:true,
+                        tabBarLabel: "",   
+
+                    }}
+                />  
+
+                <Screen
+                    name="AddCattle"
+                    component={ AddCattle }
                     options={{
 
                         tabBarVisible:true,

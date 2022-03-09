@@ -100,9 +100,9 @@ const ManagePasture: React.FC = () => {
     }, []);
 
 
-    function handleNavigatCattleList()
+    function handleNavigatCattleList( id: string )
     {
-        alert( "ops!");
+        navigation.navigate("AddCattle", { id } );
     }
 
     function handleDeletCattleList()
@@ -152,15 +152,15 @@ const ManagePasture: React.FC = () => {
 
             </ScrollView>
 
-            <View style={styles.footer}>
+            <View style = { styles.footer }>
 
-                <Text style={styles.footerText}>
+                <Text style = { styles.footerText }>
                     { count } Gados(s) encontrado(s)
                 </Text>
 
                 <RectButton
-                    style = {styles.addButton}
-                    onPress = { handleNavigatCattleList }
+                    style = { styles.addButton }
+                    onPress = { () => handleNavigatCattleList( params.id ) }
                 >
                     <Feather name="plus" size={20} color="#fff" />
 
