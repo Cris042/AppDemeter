@@ -100,7 +100,7 @@ export default function Map()
          await AsyncStorage.removeItem('@appIF:PicketUsed');
       }
 
-      // delet();
+      //delet();
       loadFarms();
       loadPosition();
       loadPicketUsed();

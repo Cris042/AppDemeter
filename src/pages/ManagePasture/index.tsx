@@ -97,7 +97,7 @@ const ManagePasture: React.FC = () => {
       loadCattle();
       loadPiket();
   
-    }, []);
+    }, [ picketUsed ]);
 
 
     function handleNavigatCattleList( id: string )

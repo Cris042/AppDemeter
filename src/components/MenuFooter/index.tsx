@@ -1,23 +1,23 @@
 import React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-
-import colors from '../../styles/colors';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from '../../pages/Home';
-import GerenciarGados from '../../pages/GerenciarGados';
 import Login from '../../pages/Login';
-import CadastroFazenda from '../../pages/CadastroFazenda';
-import SelectMapPosition from '../../pages/SelectMapPosition';
-import MeusDados from '../../pages/AtualizarDados';
-import FazendaEdit from '../../pages/FazendaEdit';
+import AddCattle from '../../pages/AddCattle';
 import ListarGados from '../../pages/ListarGados';
+import FazendaEdit from '../../pages/FazendaEdit';
+import MeusDados from '../../pages/AtualizarDados';
 import ListarPastos from '../../pages/ListarPastos';
 import CadastarGados from '../../pages/CadastroGados';
 import ManagePasture from '../../pages/ManagePasture';
-import AddCattle from '../../pages/AddCattle';
+import GerenciarGados from '../../pages/GerenciarGados';
+import CadastroFazenda from '../../pages/CadastroFazenda';
+import SelectMapPosition from '../../pages/SelectMapPosition';
+
+import colors from '../../styles/colors';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 

@@ -69,7 +69,7 @@ export default function Data() {
   const [ sex, setSex ] = useState("f");
   const [ node, setNode ] = useState("");
   const [ matriz, setMatriz ] = useState("-1");
-  const [ earring, setEarring ] = useState("");
+  const [ earring, setEarring ] = useState(" ");
   const [ farm , setFarm ] = useState("-1");
  
   const [ farms , setFarms ] = useState<Farms[]>([]);
@@ -167,7 +167,7 @@ export default function Data() {
     const cattleExistsAlert =  cattle.find( cattle => cattle.name ===  name );
     const cattleEarringExistsAlert = cattle.find( cattle => cattle.earring == Number( earring ) );
 
-    if( ( weight !== "" && age !== "" ) && ( cattleExistsAlert === undefined ) && ( cattleEarringExistsAlert === undefined ) )
+    if( ( weight !== "" && age !== "" ) && ( cattleExistsAlert === undefined ) && ( cattleEarringExistsAlert === undefined || earring == " " ) )
     {
 
       var obj = [{}];
@@ -212,7 +212,9 @@ export default function Data() {
 
     
       handleCreate( obj );
-      handleCreatePicketUsed( picketUsed );
+
+      if( farm != "-1" )
+        handleCreatePicketUsed( picketUsed );
 
       navigation.navigate("ListarGados" );
 

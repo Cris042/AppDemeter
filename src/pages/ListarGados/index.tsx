@@ -7,7 +7,6 @@ import {  useNavigation } from "@react-navigation/native";
 import { RectButton } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 
-import api from "../../services/axios";
 import styles from "./styles";
 
 
@@ -35,8 +34,7 @@ const CatleList: React.FC = () => {
 
       async function load() 
       {
-        const dataKey = '@appIF:Cattle';
-        const response = await AsyncStorage.getItem( dataKey );
+        const response = await AsyncStorage.getItem( '@appIF:Cattle' );
  
         const responseFormatted = response ? JSON.parse( response ) : [];
         const expensives = responseFormatted;
