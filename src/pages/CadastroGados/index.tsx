@@ -179,6 +179,8 @@ export default function Data() {
           var id = String( uuid.v4() );
           var idPicketUsed = String( uuid.v4() );
 
+          var earringAux = Number( earring )+ i;
+
           obj[ i ] = 
           {
             id: id,
@@ -192,7 +194,7 @@ export default function Data() {
             age: String( age ),
             sex: String( sex ),
             node:  String( node ),
-            earring : String( earring ),
+            earring : String( earring === " " ?  uuid.v4() : earringAux ),
             matriz: String( matriz ),
             farm: String( typePiquet?.id ),
             occupancyRate: String( occupancyRate.toFixed( 1 ) ),

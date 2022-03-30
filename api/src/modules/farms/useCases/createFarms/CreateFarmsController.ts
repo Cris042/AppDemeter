@@ -6,9 +6,9 @@ class CreateFarmsController
 {
   async handle( request: Request, response: Response ): Promise<Response> 
   {
-    for( var i = 0; i < request.body.expensives.length; i++ )
+    for( var i = 0; i < request.body.expensivesFarm.length; i++ )
     {
-      const { name, countFood, type, size, latitude, longitude, status, id, id_user } = request.body.expensives[i];
+      const { name, countFood, type, size, latitude, longitude, status, id, id_user } = request.body.expensivesFarm[i];
       const createUserUseCase = container.resolve( CreateFarmsUseCase );
 
       await createUserUseCase.execute(

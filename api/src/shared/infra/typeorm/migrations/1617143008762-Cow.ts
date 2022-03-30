@@ -16,7 +16,7 @@ export class Cow1617143008762 implements MigrationInterface {
                 },
 
                 {
-                    name: "id_user",
+                    name: "idUser",
                     type: "uuid",
                 },
 

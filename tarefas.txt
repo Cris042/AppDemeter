@@ -16,7 +16,7 @@
    "Gerenciar piquete"
    {
       cadastro, 
-      *adicionar,
+      adicionar,
       *deletar,
       *pesquisa
       *ditar, 
@@ -46,7 +46,7 @@
    "backup"
    {
       gados,
-      *pastos
+      pastos
       *pastos usados
       *propriedade e dados do usuario
    }
@@ -54,7 +54,7 @@
 
 Ajustes
 
-- limpa os input depois de realizar um cadastro
+- limpa os input depois de realizar um cadastro 
 - mostar as informaçoes dos gados e dos pasto na pagina de gerenciar 
 - ajustes no funcionamento offiline: nao pemitir cadastro de pasto e muda a tela inicial so app
 - mostra uma tela de carregando enquato procura as informaçoes em listagem de gados e listagem de piquetes
