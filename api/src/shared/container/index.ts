@@ -1,6 +1,6 @@
-import { container } from "tsyringe";
-
 import "@shared/container/providers";
+
+import { container } from "tsyringe";
 
 import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
 import { UsersRepository } from "@modules/accounts/infra/typeorm/repositories/UsersRepository";
@@ -10,6 +10,9 @@ import { PicketRepository } from "@modules/farms/infra/typeorm/repositories/Pick
 
 import { ICowRepository } from "@modules/cow/repositories/ICowRepository";
 import { CowRepository } from "@modules/cow/infra/typeorm/repositories/CowRepository";
+
+import { IPicketUsedRepository } from "@modules/farms/repositories/IPicketUsedRepository";
+import { PicketUsedRepository } from "@modules/farms/infra/typeorm/repositories/PicketUsedRepository";
 
 container.registerSingleton<IUsersRepository>(
   "UsersRepository",
@@ -24,4 +27,9 @@ container.registerSingleton<IPicketRepository>(
 container.registerSingleton<ICowRepository>(
   "CowRepository",
    CowRepository
+);
+
+container.registerSingleton<IPicketUsedRepository>(
+  "PicketUsedRepository",
+   PicketUsedRepository
 );

@@ -54,6 +54,7 @@
 
 Ajustes
 
+- o backup de pickedUsed nao esta passando o cattleID
 - limpa os input depois de realizar um cadastro 
 - mostar as informaçoes dos gados e dos pasto na pagina de gerenciar 
 - ajustes no funcionamento offiline: nao pemitir cadastro de pasto e muda a tela inicial so app

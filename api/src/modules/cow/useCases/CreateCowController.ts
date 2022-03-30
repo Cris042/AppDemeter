@@ -9,6 +9,7 @@ class CreateCowController
     
     for( var i = 0; i < request.body.expensivesCattle.length; i++ )
     {
+
       const { id, id_user, breed, name, sex, node, matriz, earring, status, initialWeight, weight,purchaseValue, datePurchase, age  } = request.body.expensivesCattle[i];
       const createUserUseCase = container.resolve( CreateCowUseCase );
 
@@ -29,9 +30,10 @@ class CreateCowController
           datePurchase,
           dateOfBirth : age,
       });
+      
     }
     
-  return response.status(201).send();
+    return response.status(201).send();
 
   }
 }

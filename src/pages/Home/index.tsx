@@ -100,7 +100,7 @@ export default function Map()
          await AsyncStorage.removeItem('@appIF:PicketUsed');
       }
 
-      // delet();
+      //delet();
       loadFarms();
       loadPosition();
       loadPicketUsed();
@@ -111,6 +111,7 @@ export default function Map()
     {
        const responseFarm = await AsyncStorage.getItem( '@appIF:Farm' );
        const responseCattle = await AsyncStorage.getItem( '@appIF:Cattle');
+       const responsePicketUsed = await AsyncStorage.getItem( '@appIF:PicketUsed');
 
        const responseFormattedFarm = responseFarm ? JSON.parse( responseFarm ) : [];
        const expensivesFarm = responseFormattedFarm;
@@ -118,11 +119,17 @@ export default function Map()
        const responseFormattedCattle = responseCattle ? JSON.parse( responseCattle ) : [];
        const expensivesCattle = responseFormattedCattle;
 
+       const responseFormattedPicketUsed = responsePicketUsed ? JSON.parse( responsePicketUsed ) : [];
+       const expensivesPicketUsed = responseFormattedPicketUsed;
+
        if( backupEf === false && expensivesFarm != null )     
           await api.post( "farms/backup", { expensivesFarm } );
 
        if( backupEf === false && expensivesCattle != null )   
           await api.post( "cow/backup", { expensivesCattle });
+
+       if( backupEf === false && expensivesPicketUsed != null )   
+          await api.post( "picketUsed/backup", { expensivesPicketUsed });
     }
 
     NetInfo.fetch().then( state => 
