@@ -25,6 +25,17 @@ interface Farms
   longitude: number;
 }
 
+interface User
+{
+  id: string;
+  name: string,
+  password: number,
+  email: string,
+  isAdmin: number,
+  avatar: string,
+  token: string,
+}
+
 interface PickedUsed
 {
   dateEntryPicket: String,
@@ -43,6 +54,7 @@ export default function Map()
     const dataKey = '@appIF:Farm';
     let count = 0;
 
+    const [ user , setUser ] = useState<User[]>([]);
     const [ farms , setFarms ] = useState<Farms[]>([]);
     const [ pickedUsed , setPicketUsed ] = useState<PickedUsed[]>([]);
      
@@ -81,6 +93,18 @@ export default function Map()
           setPicketUsed( expensivesPickedUsed );
       }
 
+      async function loadUser() 
+      {
+    
+         const responseUser = await AsyncStorage.getItem( "@appIF:User" );
+
+         const responseUserFormatted = responseUser ? JSON.parse( responseUser ) : [];
+         const expensivesUser = responseUserFormatted;
+
+         setUser( expensivesUser );   
+
+      }
+
       async function loadFarms() 
       {
     
@@ -98,9 +122,11 @@ export default function Map()
          await AsyncStorage.removeItem('@appIF:Cattle');
          await AsyncStorage.removeItem('@appIF:Farm');
          await AsyncStorage.removeItem('@appIF:PicketUsed');
+         await AsyncStorage.removeItem('@appIF:User');
       }
 
       //delet();
+      loadUser();
       loadFarms();
       loadPosition();
       loadPicketUsed();
@@ -138,6 +164,10 @@ export default function Map()
        {
            backup();    
            setBackupEf( true );    
+       }
+       else
+       {
+          navigation.navigate("Gerenciar");
        }
                         
     });

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import MapView, { MapEvent, Marker } from "react-native-maps";
 import { RectButton } from "react-native-gesture-handler";
+import NetInfo from "@react-native-community/netinfo";
 
 import mapMarkerImg from "../../images/map-marker.png";
 import styles from "./styles";
@@ -33,6 +34,16 @@ export default function SelectMapPosition()
   {
     setPostition( event.nativeEvent.coordinate );
   }
+
+  NetInfo.fetch().then( state => 
+  {
+      if( !state.isConnected ) 
+      {        
+        alert("Ops! nao foi possivel encontrar conexão com a internet");
+        navigation.navigate("Gerenciar");
+      }
+
+  });
 
   return (
     <View style={styles.container}>

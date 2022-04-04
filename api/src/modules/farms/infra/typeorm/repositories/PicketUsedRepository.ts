@@ -17,6 +17,7 @@ class PicketUsedRepository implements IPicketUsedRepository
      id,
      dateEntryPicket,
      dateExitPicket,
+     picketID,
      cattleID,
      occupancyRate,
 
@@ -27,6 +28,7 @@ class PicketUsedRepository implements IPicketUsedRepository
         id,
         dateEntryPicket,
         dateExitPicket,
+        picketID,
         cattleID,
         occupancyRate,
 

@@ -31,8 +31,8 @@ const Menu: React.FC = () => {
                     style: 
                     {
                         height: "9%",
-                        width: "310%",
-                        paddingLeft: 25,
+                        width: "300%",
+                        marginLeft : "-16%",
                         backgroundColor: colors.menu,
                         borderTopWidth: 0,
                     },
@@ -62,16 +62,15 @@ const Menu: React.FC = () => {
                 
             >
 
-                {/* <Screen
+                <Screen
                     name="Login"
                     component={ Login }
                     options={{
 
                         tabBarVisible:false,
                         tabBarLabel: "",   
-
                     }}
-                />      */}
+                />     
 
                 <Screen
                     name="Home"

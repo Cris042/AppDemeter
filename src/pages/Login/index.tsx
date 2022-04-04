@@ -1,10 +1,13 @@
 import React,{ useState, useEffect } from 'react';
 
 import { Wrapper, BoxLogin, Input, Button, Card, Image, Gif} from './styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 
-import Logo from "../../../assets/iconnn.png";
 import GifImage from "../../images/loading.gif";
+import Logo from "../../../assets/iconnn.png";
+
+import api from "../../services/axios";
 
 export default function Login() {
 
@@ -22,11 +25,40 @@ export default function Login() {
     data.append("senha", senha);
 
 
-    if( reg.test( email ) == true )
-      navigation.navigate("Home");
-    else
+    if( reg.test( email ) != true )
       alert("Email invalido");
 
+    const resp = await api.post("authenticate/sessions", { data } );
+
+    if( resp.data.token )
+    {
+       const dataKey = '@appIF:User';
+
+       const obj = 
+       {
+         id: resp.data.id,
+         name: resp.data.name,
+         password: resp.data.password,
+         email: resp.data.email,
+         isAdmin: resp.data.isAdmin,
+         avatar: resp.data.avatar,
+         token: resp.data.token,
+       }
+
+       const data = await AsyncStorage.getItem( dataKey );
+       const currentData = data ? JSON.parse( data ) : [];
+
+       const dataFormatted = [
+         ...currentData,
+         obj
+       ];
+
+       await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );           
+       navigation.navigate("Home");
+    }
+  
+    // alert("Usuario não encontrado");
+    
   }
 
   const [ isLoading, setLoading ] = useState( true );
@@ -58,14 +90,16 @@ export default function Login() {
               </Card>
 
               <Input
-                  placeholder={'Digite seu Nome'}
+                  placeholder={'Digite seu E-mail'}
                   onChangeText={setEmail} 
               />
 
               <Input
-                  placeholder={'Digite seu E-mail'}
-                  onChangeText={setEmail} 
+                  placeholder={'Digite sua senha'}
+                  onChangeText={setSenha} 
+                  secureTextEntry={true}
               />
+
 
               <Button
                 onPress={Logar}

@@ -47,7 +47,7 @@
    {
       gados,
       pastos
-      *pastos usados
+      pastos usados
       *propriedade e dados do usuario
    }
   
@@ -55,9 +55,9 @@
 Ajustes
 
 - o backup de pickedUsed nao esta passando o cattleID
+- passar UserId na hora de fazer o backup
 - limpa os input depois de realizar um cadastro 
 - mostar as informaçoes dos gados e dos pasto na pagina de gerenciar 
-- ajustes no funcionamento offiline: nao pemitir cadastro de pasto e muda a tela inicial so app
 - mostra uma tela de carregando enquato procura as informaçoes em listagem de gados e listagem de piquetes
 
 
