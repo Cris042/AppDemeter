@@ -9,7 +9,8 @@ import Logo from "../../../assets/iconnn.png";
 
 import api from "../../services/axios";
 
-export default function Login() {
+export default function Login() 
+{
 
   const navigation = useNavigation();
   const [ email, setEmail] = useState("");
@@ -56,8 +57,9 @@ export default function Login() {
        await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );           
        navigation.navigate("Home");
     }
-  
-    // alert("Usuario não encontrado");
+    else
+      alert("Usuario não encontrado");
+
     
   }
 
