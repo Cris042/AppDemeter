@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Picker } from '@react-native-picker/picker';
 import MapView, { Marker } from "react-native-maps";
 import { useRoute } from "@react-navigation/native";
+import uuid from 'react-native-uuid';
 
 import mapMaker from "../../images/map-marker.png";
 import api from "../../services/axios";
@@ -34,6 +35,12 @@ export default function FazendaEdit()
 {
   const route = useRoute();
   const navigation = useNavigation();
+  const dataKey = '@appIF:Farm';
+
+  const [ name, setName ] = useState("");
+  const [ size, setSize ] = useState("");
+  const [ type, setType ] = useState("");
+  const [ status, setStatus ] = useState( true );
 
   const [ farms , setFarms ] = useState<Farms[]>([]);
   const [ farm, setFarm ] = useState<Farms>();
@@ -86,9 +93,56 @@ export default function FazendaEdit()
     );
   }
  
+  async function handleCreateFarm( obj = {} )
+  {
+      try 
+      {
+    
+        const dataFormatted = [ obj ];
+        await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );           
+        navigation.navigate("Home");
+
+      } 
+      catch ( error ) 
+      {
+        console.log( error );
+      }
+
+  }
+
+
   async function handleEdit() 
   {   
-    alert("Ops!")
+      const amountOffood = 
+      ( 
+          type === "Braquiarão" ? 14000 : type === "Mombaça" ? 28000 : type === "Tanzania" ? 21000 : 
+          type === "Tifton" ? 12600 : type === "Colonião" ? 12600 : 14000
+      );
+
+      const obj = 
+      {
+        id: farm?.id,
+        name: name == "" ? farm?.name : name,
+        countFood: String( amountOffood ),
+        type: type == "" ? "Braquiarão" : String( type ),
+        size: String( size == "" ? farm?.size : size ),
+        latitude: String( initialPosition.latitude ),
+        longitude: String( initialPosition.longitude ),
+        status: String( status ),
+        id_user: String( uuid.v4() ),
+      }
+
+      if( name != farm?.name)
+      {
+        const farmsExistsAlert =  farms.find( farms => farms.name ===  name );
+
+        if( farmsExistsAlert?.id === undefined )       
+          handleCreateFarm( obj );
+        else
+          alert( size === "" ? "Ops! O Campo : Tamanho do pasto e Obrigatorio" : "Ops! Ja existe um pasto com esse nome" );
+      }
+      else
+         handleCreateFarm( obj );
   } 
 
   function handleManagePasture( id: string )
@@ -135,23 +189,45 @@ export default function FazendaEdit()
         </View>
 
         <Text style={styles.label}>Nome</Text>
-        <TextInput style={styles.input} value = { farm.name } placeholder = "Nome do pasto ( Minimo 3 letras )"  />
+        <TextInput 
+            style={styles.input}
+            placeholder = { farm.name }
+            onChangeText = { setName } 
+          />
 
         <Text style={styles.label}>Tamanho em hectares</Text>
-        <TextInput style={styles.input} value = { farm.size }  keyboardType = "numeric"  placeholder = "Tamanho do pasto" />
+        <TextInput 
+            style={styles.input} 
+            keyboardType = "numeric"  
+            placeholder = { farm.size }
+            onChangeText = { setSize }  
+        />
 
         <Text style={styles.label}>Tipo</Text>
 
-        <Picker mode = "dropdown"  >
-          <Picker.Item  label = { farm.type } value = {  farm.type } style = {styles.picker} />
+        <Picker mode = "dropdown"  
+          selectedValue = { type }
+          onValueChange = { ( itemValue, itemIndex ) =>
+            setType( itemValue )
+          }>
+
+            <Picker.Item label = { farm.type } value= { farm.type } style = { styles.picker } />
+            <Picker.Item label = "Braquiarão" value = "Braquiarão" style = { styles.picker } />
+            <Picker.Item label = "Mombaça" value = "Mombaça" style = { styles.picker } />
+            <Picker.Item label = "Tanzania" value = "Tanzania" style = { styles.picker } />
+            <Picker.Item label = "Tifton" value = "Tifton" style = { styles.picker } />
+            <Picker.Item label = "Colonião" value = "Colonião" style = { styles.picker } />
+        
         </Picker>
+
 
         <View style={styles.switchContainer}>
           <Text style={styles.label}>O pasto esta disponivel ?</Text>
           <Switch
             thumbColor="#fff"
-            value = { true }
             trackColor={{ false: "#ccc", true: "#39CC83" }}
+            value = { status }
+            onValueChange = { setStatus }
           />
         </View>
 

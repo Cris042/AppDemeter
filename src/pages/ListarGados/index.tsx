@@ -51,6 +51,11 @@ const CatleList: React.FC = () => {
         navigation.navigate("CadastarGados");
     }
 
+    function handleNavigatFarmDetails( id: number ) 
+    {
+        navigation.navigate("CattleEdit", { id } );
+    }
+
 
     return (
         <View style = { styles.container } >
@@ -74,7 +79,7 @@ const CatleList: React.FC = () => {
                                 <Text style = { styles.textCard }> Idade : { cattle.age } </Text>                 
                             </View>
 
-                            <Text style = { styles.btnCard }  > Editar Gado </Text>   
+                            <Text style = { styles.btnCard } onPress={() => handleNavigatFarmDetails( cattle.id )} > Editar Gado </Text>     
                         </View>
                     );   
                 })}

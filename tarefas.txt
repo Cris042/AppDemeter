@@ -6,7 +6,6 @@
       tela : "Gerenciar Gados"
       tela : "Locaçao de Gados"
       *tela : Minha conta   
-      *tela : "Minha propriedade"  
    }
 
    {
@@ -17,9 +16,9 @@
    {
       cadastro, 
       adicionar,
-      *deletar,
+      *deletar
       *pesquisa
-      *ditar, 
+      *editar, 
    }
     
    "Gerenciar Gados"
@@ -31,16 +30,9 @@
 
    "minha conta\meus dados"
    {
-      *cadastro, 
-      *login
-      *ditar, 
-   }
-
-   "minha conta\minha propriedade"
-   {
-      *cadastro, 
-      *ditar, 
-      *deletar, 
+      login
+      cadastro, 
+      *editar, 
    }
 
    "backup"
@@ -48,17 +40,14 @@
       gados,
       pastos
       pastos usados
-      *propriedade e dados do usuario
+      *dados do usuario
    }
   
 
 Ajustes
 
-- o backup de pickedUsed nao esta passando o cattleID
-- passar UserId na hora de fazer o backup
-- limpa os input depois de realizar um cadastro 
-- mostar as informaçoes dos gados e dos pasto na pagina de gerenciar 
-- mostra uma tela de carregando enquato procura as informaçoes em listagem de gados e listagem de piquetes
+- passar UserId na hora de fazer os backup
+- login nao esta mostrando menssagem de error
 
 
 

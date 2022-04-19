@@ -9,6 +9,7 @@ import Login from '../../pages/Login';
 import AddCattle from '../../pages/AddCattle';
 import ListarGados from '../../pages/ListarGados';
 import FazendaEdit from '../../pages/FazendaEdit';
+import cattleEdit from '../../pages/CattleEdit';
 import MeusDados from '../../pages/AtualizarDados';
 import ListarPastos from '../../pages/ListarPastos';
 import CadastarGados from '../../pages/CadastroGados';
@@ -31,7 +32,7 @@ const Menu: React.FC = () => {
                     style: 
                     {
                         height: "9%",
-                        width: "300%",
+                        width: "335%",
                         marginLeft : "-16%",
                         backgroundColor: colors.menu,
                         borderTopWidth: 0,
@@ -155,6 +156,17 @@ const Menu: React.FC = () => {
                 <Screen
                     name="FazendaEdit"
                     component={ FazendaEdit }
+                    options={{
+
+                        tabBarVisible:false,
+                        tabBarLabel: "",   
+
+                    }}
+                />
+
+                <Screen
+                    name="CattleEdit"
+                    component={ cattleEdit }
                     options={{
 
                         tabBarVisible:false,

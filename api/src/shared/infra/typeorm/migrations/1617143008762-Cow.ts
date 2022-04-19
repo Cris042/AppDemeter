@@ -51,7 +51,6 @@ export class Cow1617143008762 implements MigrationInterface {
                 {
                     name: 'brinco',
                     type: 'integer',
-                    isUnique: true,
                     isNullable : true,
                 },
 

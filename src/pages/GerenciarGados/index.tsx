@@ -44,9 +44,7 @@ const ChamanageCattle: React.FC = () => {
             </View>
 
             <View style = { styles.cardBory }>
-                <Text style = { styles.textCard }> Peso Medio: 200 KG </Text> 
-                <Text style = { styles.textCard }> Media de Idade: 10 Anos </Text>                 
-                <Text style = { styles.textCard }> Gados: 1.000/300 </Text> 
+                <Text style = { styles.textCard }> Ver informações dos gados </Text> 
             </View>
 
             <Text style = { styles.btnCard } onPress={ handleNavigatCattleList }> Gerenciar Gado </Text>      
@@ -58,9 +56,7 @@ const ChamanageCattle: React.FC = () => {
             </View>
 
             <View style = { styles.cardBory }>              
-                <Text style = { styles.textCard }> Pastos : 25 </Text> 
-                <Text style = { styles.textCard }> Gados Suportada: 1200 </Text>   
-                <Text style = { styles.textCard }> Tamanho Medio : 50 </Text> 
+                <Text style = { styles.textCard }> Ver informações dos pastos </Text> 
             </View>
                 
             <Text style = { styles.btnCard } onPress={ handleNavigaPiquetList }> Gerenciar Pasto </Text>   

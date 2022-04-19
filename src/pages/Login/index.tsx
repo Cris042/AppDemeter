@@ -38,11 +38,10 @@ export default function Login()
        const obj = 
        {
          id: resp.data.id,
-         name: resp.data.name,
-         password: resp.data.password,
-         email: resp.data.email,
-         isAdmin: resp.data.isAdmin,
-         avatar: resp.data.avatar,
+         name: resp.data.user.name,
+         email: resp.data.user.email,
+         isAdmin: resp.data.user.isAdmin,
+         avatar: resp.data.user.avatar,
          token: resp.data.token,
        }
 
@@ -56,6 +55,7 @@ export default function Login()
 
        await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );           
        navigation.navigate("Home");
+
     }
     else
       alert("Usuario não encontrado");
