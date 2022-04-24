@@ -5,7 +5,7 @@
       tela : "cadastro piquete"
       tela : "Gerenciar Gados"
       tela : "Locaçao de Gados"
-      *tela : Minha conta   
+      tela : Minha conta   
    }
 
    {
@@ -16,15 +16,15 @@
    {
       cadastro, 
       adicionar,
-      *deletar
+      deletar,
+      editar, 
       *pesquisa
-      *editar, 
    }
     
    "Gerenciar Gados"
    {
       cadastro, 
-      *ditar, 
+      ditar, 
       *pesquisa
    }
 
@@ -32,7 +32,7 @@
    {
       login
       cadastro, 
-      *editar, 
+      *editar dados, 
    }
 
    "backup"
@@ -40,14 +40,17 @@
       gados,
       pastos
       pastos usados
-      *dados do usuario
    }
   
 
 Ajustes
 
-- passar UserId na hora de fazer os backup
+- na hora de editar esta gerendo um cadastro desnecessário
+- so lista pastos e gados que estejam ativos
+- lista so as informaçoes de um determinado usuario
+- passar UserId na hora de fazer o cadastro
 - login nao esta mostrando menssagem de error
+- na hora de editar o value nao esta mudando
 
 
 

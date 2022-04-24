@@ -65,7 +65,7 @@ export default StyleSheet.create({
     textAlign: "center",
     color: "#27b844",
     fontSize: 18,
-    marginTop: "-8%",
+    marginTop: "-20%",
     marginRight: -70,
   },
 

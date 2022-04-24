@@ -50,6 +50,7 @@ const ManagePasture: React.FC = () => {
 
     const route = useRoute();
     const navigation = useNavigation();
+    const dataKey = '@appIF:PicketUsed';
 
     const [ picketUsed , setPicketUsed ] = useState<PickedUsed[]>([]);
     const [ cattle , setCattle ] = useState<Cattle[]>([]);
@@ -99,15 +100,44 @@ const ManagePasture: React.FC = () => {
   
     }, [ picketUsed ]);
 
-
     function handleNavigatCattleList( id: string )
     {
         navigation.navigate("AddCattle", { id } );
     }
 
-    function handleDeletCattleList()
+    async function handleDeletCattleList( id: string )
     {
-        alert( "ops!!");
+        const data = await AsyncStorage.getItem( dataKey );
+        const currentData = data ? JSON.parse( data ) : [];
+        AsyncStorage.removeItem( dataKey );
+        
+        let newData = [{}];
+        let dataFormatted = [];
+        let i = 0;
+    
+        try 
+        {
+          currentData.forEach( ( element: { id: string; }) => {
+    
+            if( element.id != id )     
+               newData[i] = element;  
+    
+            i++;
+          });
+    
+          dataFormatted = [
+            ...newData,
+          ];
+         
+          await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );    
+        } 
+        catch ( error ) 
+        {
+            
+            console.log( error );
+
+        }
+
     }
 
 
@@ -141,7 +171,7 @@ const ManagePasture: React.FC = () => {
                                     <Text style = { styles.textCard }> Peso : { cattkeObj?.weight } ( kg ) </Text>                             
                                 </View>
 
-                                <RectButton style = { styles.btnCard } onPress = { handleDeletCattleList  }>
+                                <RectButton style = { styles.btnCard } onPress={() => handleDeletCattleList( String( picket?.id ) )} >
                                     <Text style = { styles.btnCardTxt }> Remover </Text>
                                 </RectButton>
 

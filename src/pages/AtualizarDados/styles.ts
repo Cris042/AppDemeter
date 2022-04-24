@@ -1,22 +1,89 @@
-import styled from 'styled-components/native';
-import Constants from 'expo-constants';
-import { Platform } from 'react-native';
+import { StyleSheet } from "react-native";
 
-import colors from '../../styles/colors';
+export default StyleSheet.create({
+  container: {
+    flex: 1,
+  },
 
-const statusBarHeight =
-  Platform.OS === 'android' ? Constants.statusBarHeight : 0;
+  title: {
+    color: "#27b844",
+    fontSize: 24,
+    marginBottom: 32,
+    marginTop: 32,
+    textAlign: "center",
+    paddingBottom: 24,
+    borderBottomWidth: 1.2,
+    borderBottomColor: "#ccc",
+  },
 
-export const Wrapper = styled.SafeAreaView`
-  background: ${ colors.primary };
-  flex: 1;
-  padding-top: ${ statusBarHeight + 'px' };
+  label: {
+    color: "#8fa7b3",
+    marginBottom: 8,
+  },
 
-  justify-content: center;
-  align-items: center;
-`;
+  comment: {
+    fontSize: 11,
+    color: "#8fa7b3",
+  },
 
-export const Heading = styled.Text`
-  color: ${ colors.fonte };
-  font-size: 30px;
-`;
+  input: {
+    backgroundColor: "#fff",
+    borderWidth: 1.4,
+    borderColor: "#d3e2e6",
+    borderRadius: 20,
+    height: 56,
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    marginBottom: 16,
+    textAlignVertical: "top",
+  },
+ 
+  switchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 16,
+  },
+
+  nextButton: {
+    backgroundColor: "#51EE49",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 56,
+    marginTop: 32,
+  },
+
+  nextButtonText: {
+    fontSize: 20,
+    color: "#000",
+    marginLeft: "40%",
+    marginRight: "40%",
+    marginTop: 10,
+  },
+
+  picker: {
+    backgroundColor: "transparent",
+    borderWidth: 1.4,
+    borderColor: "#d3e2e6",
+    height: 56,
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    marginBottom: 16,
+    textAlignVertical: "top",
+  },
+
+  pickerInput:{
+     marginBottom: 20,
+     marginTop: 10,
+  },
+
+  switchContaine: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 16,
+  },
+
+
+});

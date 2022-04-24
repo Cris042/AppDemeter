@@ -37,11 +37,6 @@ export default function FazendaEdit()
   const navigation = useNavigation();
   const dataKey = '@appIF:Farm';
 
-  const [ name, setName ] = useState("");
-  const [ size, setSize ] = useState("");
-  const [ type, setType ] = useState("");
-  const [ status, setStatus ] = useState( true );
-
   const [ farms , setFarms ] = useState<Farms[]>([]);
   const [ farm, setFarm ] = useState<Farms>();
 
@@ -82,6 +77,12 @@ export default function FazendaEdit()
     load();
 
   }, [ farms ] );
+
+  
+  const [ name, setName ] = useState( String( farm?.name ) );
+  const [ size, setSize ] = useState( String( farm?.size ) );
+  const [ type, setType ] = useState( String( farm?.type ) );
+  const [ status, setStatus ] = useState( String( farm?.status ) );
   
 
   if (!farm) 
@@ -92,21 +93,40 @@ export default function FazendaEdit()
       </View>
     );
   }
- 
-  async function handleCreateFarm( obj = {} )
-  {
-      try 
-      {
-    
-        const dataFormatted = [ obj ];
-        await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );           
-        navigation.navigate("Home");
 
-      } 
-      catch ( error ) 
-      {
-        console.log( error );
-      }
+  async function handleCreateFarm( obj = {}, id : string )
+  {
+    const data = await AsyncStorage.getItem( dataKey );
+    const currentData = data ? JSON.parse( data ) : [];
+    AsyncStorage.removeItem( dataKey );
+      
+    let newData = [{}];
+    let dataFormatted = [];
+    let i = 0;
+
+    try 
+    {
+      currentData.forEach( ( element: { id: string; }) => {
+
+        if( element.id != id )     
+           newData[i] = element;  
+
+        i++;
+      });
+
+      dataFormatted = [
+        ...newData,
+        obj
+      ];
+     
+      await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );    
+      navigation.navigate("Home" );
+
+    } 
+    catch ( error ) 
+    {
+      console.log( error );
+    }
 
   }
 
@@ -119,7 +139,9 @@ export default function FazendaEdit()
           type === "Tifton" ? 12600 : type === "Colonião" ? 12600 : 14000
       );
 
-      const obj = 
+      let obj = {};
+
+      obj = 
       {
         id: farm?.id,
         name: name == "" ? farm?.name : name,
@@ -128,21 +150,21 @@ export default function FazendaEdit()
         size: String( size == "" ? farm?.size : size ),
         latitude: String( initialPosition.latitude ),
         longitude: String( initialPosition.longitude ),
-        status: String( status ),
+        status: String( status == "" ? farm?.status : status ),
         id_user: String( uuid.v4() ),
       }
 
-      if( name != farm?.name)
+      if( name != farm?.name )
       {
         const farmsExistsAlert =  farms.find( farms => farms.name ===  name );
 
         if( farmsExistsAlert?.id === undefined )       
-          handleCreateFarm( obj );
+          handleCreateFarm( obj, String( farm?.id ) );
         else
           alert( size === "" ? "Ops! O Campo : Tamanho do pasto e Obrigatorio" : "Ops! Ja existe um pasto com esse nome" );
       }
       else
-         handleCreateFarm( obj );
+         handleCreateFarm( obj, String( farm?.id ) );
   } 
 
   function handleManagePasture( id: string )
@@ -211,7 +233,6 @@ export default function FazendaEdit()
             setType( itemValue )
           }>
 
-            <Picker.Item label = { farm.type } value= { farm.type } style = { styles.picker } />
             <Picker.Item label = "Braquiarão" value = "Braquiarão" style = { styles.picker } />
             <Picker.Item label = "Mombaça" value = "Mombaça" style = { styles.picker } />
             <Picker.Item label = "Tanzania" value = "Tanzania" style = { styles.picker } />
@@ -221,15 +242,20 @@ export default function FazendaEdit()
         </Picker>
 
 
-        <View style={styles.switchContainer}>
-          <Text style={styles.label}>O pasto esta disponivel ?</Text>
-          <Switch
-            thumbColor="#fff"
-            trackColor={{ false: "#ccc", true: "#39CC83" }}
-            value = { status }
-            onValueChange = { setStatus }
-          />
-        </View>
+       
+        <Text style={styles.label}>O pasto esta disponivel ?</Text>
+         
+        <Picker mode = "dropdown"  
+          selectedValue = { String( status )}
+          onValueChange = { ( itemValue, itemIndex ) =>
+            setStatus( itemValue )
+          }>
+
+            <Picker.Item label = "Sim" value= "true" style = { styles.picker } />
+            <Picker.Item label = "Não" value = "false" style = { styles.picker } />
+        
+        </Picker>
+
 
         <RectButton style={styles.nextButton} onPress={ handleEdit  }>
           <Text style={styles.nextButtonText}> Editar </Text>

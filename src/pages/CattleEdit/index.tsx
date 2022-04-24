@@ -39,47 +39,22 @@ interface Cattle
   node: string;
   Weight: number;  
   sex: string;
-  dateOfBirth: Date;  
+  age: Date;  
   purchaseValue: number;
   datePurchase: Date;
   earring: number;
 }
-
-interface PickedUsed
-{
-    id: number;
-    dateEntryPicket: String,
-    dateExitPicket: String,
-    picketID : number,
-    cattleID : string,
-    occupancyRate : number,
-}
-
 
 export default function Data() {
 
   const dataKey = '@appIF:Cattle';
   const navigation = useNavigation();
   const route = useRoute();
+  const params = route.params as DetailsRouteParams;
   
-  const [ name, setName ] = useState("");
-  const [ count, setCount ] = useState(" ");
-  const [ breed, setBreed ] = useState("Nelore");
-  const [ status, setStatus ] = useState("a");
-  const [ weight, setWeight ] = useState("");
-  const [ purchaseValue, setPurchaseValue ] = useState("");
-  const [ datePurchase, setDatePurchase ] = useState("");
-  const [ age, setAge ] = useState("");
-  const [ sex, setSex ] = useState("f");
-  const [ node, setNode ] = useState("");
-  const [ matriz, setMatriz ] = useState("-1");
-  const [ earring, setEarring ] = useState(" ");
-  const [ farm , setFarm ] = useState("-1");
- 
   const [ farms , setFarms ] = useState<Farms[]>([]);
   const [ cattle , setCattle ] = useState<Cattle[]>([]);
   const [ cattlee , setCattlee ] = useState<Cattle>();
-  const params = route.params as DetailsRouteParams;
   
   useEffect(() => 
   {
@@ -117,130 +92,118 @@ export default function Data() {
 
   }, [ cattle ]);
 
+  const [ name, setName ] = useState( cattlee?.name );
+  const [ count, setCount ] = useState("");
+  const [ breed, setBreed ] = useState( cattlee?.breed );
+  const [ status, setStatus ] = useState( String( cattlee?.status ) );
+  const [ weight, setWeight ] = useState( String( cattlee?.Weight ) );
+  const [ purchaseValue, setPurchaseValue ] = useState( String( cattlee?.purchaseValue ) ); 
+  const [ datePurchase, setDatePurchase ] = useState( String( cattlee?.datePurchase ) );
+  const [ age, setAge ] = useState( String( cattlee?.age) );
+  const [ sex, setSex ] = useState( String( cattlee?.sex ) );
+  const [ node, setNode ] = useState( String( cattlee?.node ) );
+  const [ earring, setEarring ] = useState( String( cattlee?.earring ) );
+ 
 
-  async function handleCreatePicketUsed( objPicketUsed = [{}] )
+  async function handleCreate( obj = {}, id: string )
   {
-      var dataPicketUsed = await AsyncStorage.getItem( '@appIF:PicketUsed' );
-      var currentDataPicketUsed = dataPicketUsed ? JSON.parse( dataPicketUsed ) : [];
-      var dataFormattedPicketUsed = [];
-
-      try 
-      {  
-          dataFormattedPicketUsed = [
-            ...currentDataPicketUsed,
-            ...objPicketUsed
-          ];
-
-          await AsyncStorage.setItem( '@appIF:PicketUsed' , JSON.stringify( dataFormattedPicketUsed ) );    
+    const data = await AsyncStorage.getItem( dataKey );
+    const currentData = data ? JSON.parse( data ) : [];
+    AsyncStorage.removeItem( dataKey );
       
-      } 
-      catch ( error ) 
-      {
-          console.log( error );
-      }
-  }
+    let newData = [{}];
+    let dataFormatted = [];
+    let i = 0;
 
-  async function handleCreate( obj = [{}] )
-  {
-      var data = await AsyncStorage.getItem( dataKey );
-      var currentData = data ? JSON.parse( data ) : [];
-      var dataFormatted = [];
+    try 
+    {
+      currentData.forEach( ( element: { id: string; }) => {
 
-      try 
-      {  
-          dataFormatted = [
-            ...currentData,
-            ...obj
-          ];
-          
-          await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );    
-      
-      } 
-      catch ( error ) 
-      {
-          console.log( error );
-      }
+        if( element.id != id )     
+           newData[i] = element;  
+
+        i++;
+      });
+
+      dataFormatted = [
+        ...newData,
+        obj
+      ];
+     
+      await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );    
+      navigation.navigate("ListarGados" );
+
+    } 
+    catch ( error ) 
+    {
+      console.log( error );
+    }
   }
 
   async function handle() 
   {
 
-    const typePiquet =  farms.find( farms => farms.name ===  farm  );
-    const amountOffood = typePiquet?.countFood;
-
+    
     const consumptionBreed = 
     ( 
         breed === "Nelore" ? 3285 : breed === "Holandês" ? 5475 : breed === "Guzerá" ? 5110 : 
         breed === "Girolando" ? 3358 : breed === "Brahman" ? 5657 : breed === "Jersey" ? 4124 : 3285
     );
   
-    const occupancyRate =  ( amountOffood != null ? amountOffood : 0 ) / ( consumptionBreed != null ? consumptionBreed : 0 );
-    const aux = count === " " ? 1 : parseInt( count );
 
-    const cattleExistsAlert =  cattle.find( cattle => cattle.name ===  name );
-    const cattleEarringExistsAlert = cattle.find( cattle => cattle.earring == Number( earring ) );
+    var obj = {};
+    var earringAux = Number( earring );
 
-    if( ( weight !== "" && age !== "" ) && ( cattleExistsAlert === undefined ) && ( cattleEarringExistsAlert === undefined || earring == " " ) )
+    obj = 
     {
-
-      var obj = [{}];
-      var picketUsed = [{}];
-
-      for ( let i = 0; i < aux; i++ ) 
-      {
-          var nameCattle = ( name === "" ? breed + Math.floor( Math.random() * 10000 + 256 ) : name );
-          var id = String( uuid.v4() );
-          var idPicketUsed = String( uuid.v4() );
-
-          var earringAux = Number( earring )+ i;
-
-          obj[ i ] = 
-          {
-            id: id,
-            name: String( nameCattle ),
-            breed: String( breed ),
-            status:  String( status ),
-            initialWeight:  String( weight ),
-            weight:  String( weight ),   
-            purchaseValue:  String( purchaseValue === "" ? "0" : purchaseValue ),
-            datePurchase: String( datePurchase === "" ? cattlee?.datePurchase : datePurchase ),
-            age: String( age  === "" ? cattlee?.dateOfBirth : age ),
-            sex: String( sex ),
-            node:  String( node ),
-            earring : String( earring === " " ?  uuid.v4() : earringAux ),
-            matriz: String( matriz ),
-            farm: String( typePiquet?.id ),
-            occupancyRate: String( occupancyRate.toFixed( 1 ) ),
-            id_user: String( uuid.v4() ),
-          }
-
-          picketUsed[ i ] = 
-          {
-            id: idPicketUsed,
-            dateEntryPicket: new Date().toLocaleDateString(),
-            dateExitPicket: null,
-            picketID : typePiquet?.id,
-            cattleID : id,
-            occupancyRate : occupancyRate.toFixed( 1 ),
-          }
-      }
-
+        id: cattlee?.id ,
+        name: String( name ),
+        breed: String( breed ),
+        status:  String( status ),
+        initialWeight:  String( weight ),
+        weight:  String( weight ),   
+        purchaseValue:  String( purchaseValue === "" ? "0" : purchaseValue ),
+        datePurchase: String( datePurchase === "" ? cattlee?.datePurchase : datePurchase ),
+        age: String( age  === "" ? cattlee?.age : age ),
+        sex: String( sex ),
+        node:  String( node ),
+        earring : String( earring === " " ?  uuid.v4() : earringAux ),
+        id_user: String( uuid.v4() ),
+          
+    }
     
-      handleCreate( obj );
+    if( earring != String( cattlee?.earring ) )
+    {
+      const cattleEarringExistsAlert = cattle.find( cattle => cattle.earring == Number( earring ) );
 
-      if( farm != "-1" )
-        handleCreatePicketUsed( picketUsed );
+      if( cattleEarringExistsAlert == undefined )
+      {
+        handleCreate( obj, String( cattlee?.id ) );
+        navigation.navigate("ListarGados" );
+      }
+      else
+        alert( "");
 
-      navigation.navigate("ListarGados" );
+    }
+    else if( name != cattlee?.name )
+    {
+      const cattleExistsAlert =  cattle.find( cattle => cattle.name ===  name );
+
+      if( cattleExistsAlert == undefined )
+      {
+        handleCreate( obj, String( cattlee?.id ) );
+        navigation.navigate("ListarGados" );
+      }
+      else
+        alert("Ops! Ja existe um animal com esse nome");
 
     }
     else
-      alert
-      (
-          weight === "" || age === "" ? "Ops! O Campos Obrigatorio não foram preenchidos" : 
-          cattleEarringExistsAlert !== undefined ? "Ops! Ja existe um animal com esse brinco"
-          : "Ops! Ja existe um animal com esse nome" 
-      );
+    {
+      handleCreate( obj, String( cattlee?.id ) );
+      navigation.navigate("ListarGados" );
+    }
+
     
   } 
 
@@ -255,7 +218,7 @@ export default function Data() {
       
       <TextInput 
          style={styles.input} 
-         value = { cattlee?.name }  
+         value = { name }  
          onChangeText = { setName }    
        />
 
@@ -272,7 +235,7 @@ export default function Data() {
       
       <TextInput 
          style={styles.input} 
-         value = { String( cattlee?.Weight ) }  
+         value = { String( weight ) }  
          keyboardType = "numeric"
          onChangeText = { setWeight } 
        /> 
@@ -292,7 +255,7 @@ export default function Data() {
         <DatePicker
           style={{width: 350, marginBottom: 16, marginTop: 12 }}
           date={ age }
-          placeholder = { String( cattlee?.dateOfBirth )}
+          placeholder = { String( age )}
           mode="date"
           format="DD-MM-YYYY"
           minDate="01-01-1980"
@@ -322,7 +285,7 @@ export default function Data() {
 
       <TextInput 
          style={styles.input} 
-         value = { String( cattlee?.earring ) }  
+         value = { String( earring ) }  
          keyboardType = "numeric"
          onChangeText = { setEarring } 
        /> 
@@ -331,7 +294,7 @@ export default function Data() {
 
       <TextInput 
         style={styles.input}
-        value = { String( cattlee?.node ) }  
+        value = { String( node ) }  
         onChangeText = { setNode } 
       /> 
 
@@ -339,7 +302,7 @@ export default function Data() {
       
       <TextInput 
          style={styles.input} 
-         value = {  String( cattlee?.purchaseValue ) }  
+         value = {  String( purchaseValue ) }  
          keyboardType = "numeric"
          onChangeText = { setPurchaseValue } 
        /> 
@@ -350,7 +313,7 @@ export default function Data() {
           style={{width: 350, marginBottom: 16, marginTop: 12 }}
           date={ datePurchase }
           mode="date"
-          placeholder = { String( cattlee?.datePurchase )  }
+          placeholder = { String( datePurchase )  }
           format="DD-MM-YYYY"
           minDate="01-01-2021"
           maxDate="31-12-2021"
@@ -374,48 +337,11 @@ export default function Data() {
         }}
         onDateChange={ setDatePurchase }
       />
-
-      <Text style={styles.label}> Pasto ( Opcional ) </Text>
-
-      <Picker mode = "dropdown" style = { styles.pickerInput } 
-        selectedValue = { farm }
-        onValueChange={ ( itemValue, itemIndex ) =>
-          setFarm( itemValue )
-        }>
-
-          <Picker.Item label = "Escolhar uma Pasto" value = "-1" />
-          { farms.map(( farm ) => 
-          {
-              return (
-                <Picker.Item key = { farm.id } style ={ styles.picker}  label = { farm.name } value = { farm.name } />
-              );
-          })}
-        
-
-      </Picker>
-
-      <Text style={styles.label}> Matriz ( Opcional ) </Text>
-
-      <Picker style = { styles.pickerInput }
-        selectedValue = { matriz }
-        onValueChange={ ( itemValue, itemIndex ) =>
-          setMatriz( itemValue )
-        }>
-
-          <Picker.Item label = "Escolhar uma Matriz" value = "-1" />
-          {  cattle.map(( cattle ) => 
-          {
-              return (
-                <Picker.Item key = { Number( cattle.id ) } style={styles.picker} label = { cattle.name } value = { cattle.id } />
-              );
-          })}
-          
-      </Picker>
      
       <Text style={styles.label}> Raça </Text>
 
       <Picker mode = "dropdown" style = { styles.pickerInput }
-        selectedValue = { cattlee?.breed }
+        selectedValue = { breed }
         onValueChange={ ( itemValue, itemIndex ) =>
           setBreed( itemValue )
         }>
@@ -432,7 +358,7 @@ export default function Data() {
       <Text style={styles.label}> Sexo </Text>
 
       <Picker mode = "dropdown" style = { styles.pickerInput }
-        selectedValue = { cattlee?.sex }
+        selectedValue = { sex }
         onValueChange={ ( itemValue, itemIndex ) =>
           setSex( itemValue )
         }>
@@ -446,7 +372,7 @@ export default function Data() {
       <Text style={styles.label}> Status </Text>
 
       <Picker mode = "dropdown"  
-        selectedValue = { String( cattlee?.status ) }
+        selectedValue = { String( status ) }
         onValueChange={ ( itemValue, itemIndex ) =>
           setStatus( itemValue )
         }>
