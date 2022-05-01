@@ -144,7 +144,7 @@ const CatleList: React.FC = () => {
             await AsyncStorage.setItem( '@appIF:PicketUsed' , JSON.stringify( dataFormattedPicketUsed ) );  
 
             const idPiket = params.id;
-            navigation.navigate("ManagePasture", { idPiket } );  
+            navigation.navigate("AddCattle", { idPiket } );  
         
         } 
         catch ( error ) 

@@ -26,9 +26,10 @@ interface Farms
   name: string;
   type: string;
   size: string;
-  latitude: number;
-  longitude: number; 
+  latitude: string;
+  longitude: string; 
   status: string;
+  id_user: string;
 }
 
 export default function FazendaEdit()
@@ -42,6 +43,11 @@ export default function FazendaEdit()
 
   const [ initialPosition, setInitialPosition ] = useState({ latitude: 0, longitude: 0 });
   const params = route.params as DetailsRouteParams;
+
+  const [ name, setName ] = useState( "" );
+  const [ size, setSize ] = useState( "" );
+  const [ type, setType ] = useState( "" );
+  const [ status, setStatus ] = useState( "" );
 
   useFocusEffect(() =>
   {
@@ -59,7 +65,7 @@ export default function FazendaEdit()
 
     load();
 
-  });
+  } );
 
   useEffect(() => 
   {
@@ -76,14 +82,8 @@ export default function FazendaEdit()
 
     load();
 
-  }, [ farms ] );
 
-  
-  const [ name, setName ] = useState( String( farm?.name ) );
-  const [ size, setSize ] = useState( String( farm?.size ) );
-  const [ type, setType ] = useState( String( farm?.type ) );
-  const [ status, setStatus ] = useState( String( farm?.status ) );
-  
+  }, [ farms ] );
 
   if (!farm) 
   {
@@ -103,22 +103,28 @@ export default function FazendaEdit()
     let newData = [{}];
     let dataFormatted = [];
     let i = 0;
+    let x = 0;
 
     try 
     {
-      currentData.forEach( ( element: { id: string; }) => {
+      if( currentData.length > 1 )
+      {
+        currentData.forEach( ( element: { id: string; }) => {
+          if( element.id != id ) 
+          {    
+            newData[i] = element;  
+            i++;
+          }   
+        });
 
-        if( element.id != id )     
-           newData[i] = element;  
-
-        i++;
-      });
-
-      dataFormatted = [
-        ...newData,
-        obj
-      ];
-     
+        dataFormatted = [
+          ...newData,
+          obj
+        ];
+      }
+      else
+        dataFormatted = [ obj ];
+        
       await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );    
       navigation.navigate("Home" );
 
@@ -146,25 +152,26 @@ export default function FazendaEdit()
         id: farm?.id,
         name: name == "" ? farm?.name : name,
         countFood: String( amountOffood ),
-        type: type == "" ? "Braquiarão" : String( type ),
+        type: type == "" ? farm?.type : String( type ),
         size: String( size == "" ? farm?.size : size ),
-        latitude: String( initialPosition.latitude ),
-        longitude: String( initialPosition.longitude ),
+        latitude: String( farm?.latitude ),
+        longitude: String( farm?.longitude ),
         status: String( status == "" ? farm?.status : status ),
-        id_user: String( uuid.v4() ),
+        id_user: String( farm?.id_user ),
       }
 
       if( name != farm?.name )
       {
-        const farmsExistsAlert =  farms.find( farms => farms.name ===  name );
+         const farmsExistsAlert =  farms.find( farms => farms.name ===  name );
 
-        if( farmsExistsAlert?.id === undefined )       
-          handleCreateFarm( obj, String( farm?.id ) );
-        else
-          alert( size === "" ? "Ops! O Campo : Tamanho do pasto e Obrigatorio" : "Ops! Ja existe um pasto com esse nome" );
+         if( farmsExistsAlert?.id === undefined )       
+           handleCreateFarm( obj, String( farm?.id ) );
+         else
+           alert( "Ops! Ja existe um pasto com esse nome" );
       }
       else
          handleCreateFarm( obj, String( farm?.id ) );
+
   } 
 
   function handleManagePasture( id: string )
@@ -228,7 +235,7 @@ export default function FazendaEdit()
         <Text style={styles.label}>Tipo</Text>
 
         <Picker mode = "dropdown"  
-          selectedValue = { type }
+          selectedValue = { type == "" ? farm.type : type }
           onValueChange = { ( itemValue, itemIndex ) =>
             setType( itemValue )
           }>
@@ -246,7 +253,7 @@ export default function FazendaEdit()
         <Text style={styles.label}>O pasto esta disponivel ?</Text>
          
         <Picker mode = "dropdown"  
-          selectedValue = { String( status )}
+          selectedValue = { String( status == "" ? farm.status : status ) }
           onValueChange = { ( itemValue, itemIndex ) =>
             setStatus( itemValue )
           }>

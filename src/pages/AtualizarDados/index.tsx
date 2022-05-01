@@ -17,7 +17,7 @@ interface User
 
 export default function Data() {
 
-  const [ user, setUser ] = useState<User>();
+  const [ user, setUser ] = useState<User[]>([]);
 
   const [ name , setName ] = useState("");
   const [ email , setEmail ] = useState("");
@@ -39,24 +39,26 @@ export default function Data() {
 
   }, [  ]);
 
+  console.log( user[0] );
+
   return (
     <ScrollView
         style={styles.container}
         contentContainerStyle={{ padding: 24 }}
       >
-      <Text style={styles.title}> { user?.name } </Text>
+      <Text style={styles.title}> { user[0]?.name } </Text>
 
       <Text style={styles.label}> Nome </Text>
       <TextInput 
          style={styles.input} 
-         value = {  String( user?.name ) }  
+         placeholder = { user[0]?.name }  
          onChangeText = { setName }  
        /> 
 
       <Text style={styles.label}> E-mail </Text>
       <TextInput 
           style={styles.input} 
-          value = { String( user?.email ) }  
+          placeholder = { String( user[0]?.email ) }  
           onChangeText = { setEmail } 
       />   
 

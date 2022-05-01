@@ -119,17 +119,23 @@ const ManagePasture: React.FC = () => {
         {
           currentData.forEach( ( element: { id: string; }) => {
     
-            if( element.id != id )     
+            if( element.id != id )  
+            {  
                newData[i] = element;  
-    
-            i++;
+               i++;
+            }
+            
           });
     
           dataFormatted = [
             ...newData,
           ];
          
-          await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );    
+          var idPasture = params.id;
+
+          await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) ); 
+          navigation.navigate("ManagePasture", { idPasture } );  
+           
         } 
         catch ( error ) 
         {
@@ -155,8 +161,6 @@ const ManagePasture: React.FC = () => {
                         count++; 
                         const cattkeObj =  cattle.find( cattle => cattle.id === picket.cattleID );
                         const picketObj =  farms.find( farms =>   farms.id  === picket.picketID );
-
-                        let sizePicket = picketObj?.size != null ? picketObj?.size : 0;
 
                         return( 
                             <View key = { picket.id } style = { styles.card } >

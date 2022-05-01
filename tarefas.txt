@@ -44,13 +44,12 @@
   
 
 Ajustes
-
-- na hora de editar esta gerendo um cadastro desnecessário
+- na hora de editar fazenda nao esta limpando os input de "status" e "tipo" e tambem esta dado que ja tem pasta com o mesmo nome
 - so lista pastos e gados que estejam ativos
-- lista so as informaçoes de um determinado usuario
+- so lista pastos e gados de um determinado usuario
 - passar UserId na hora de fazer o cadastro
 - login nao esta mostrando menssagem de error
-- na hora de editar o value nao esta mudando
+
 
 
 

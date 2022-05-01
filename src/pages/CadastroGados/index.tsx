@@ -194,7 +194,7 @@ export default function Data() {
             age: String( age ),
             sex: String( sex ),
             node:  String( node ),
-            earring : String( earring === " " ?  uuid.v4() : earringAux ),
+            earring : String( earring === " " ?  null : earringAux ),
             matriz: String( matriz ),
             farm: String( typePiquet?.id ),
             occupancyRate: String( occupancyRate.toFixed( 1 ) ),

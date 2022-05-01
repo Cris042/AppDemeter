@@ -31,10 +31,12 @@ export default function Login()
 
     const resp = await api.post("authenticate/sessions", { data } );
 
+    const dataKey = '@appIF:User';
+    AsyncStorage.removeItem( dataKey );
+
     if( resp.data.token )
     {
-       const dataKey = '@appIF:User';
-
+  
        const obj = 
        {
          id: resp.data.id,
