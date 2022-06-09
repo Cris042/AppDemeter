@@ -170,9 +170,10 @@ const ManagePasture: React.FC = () => {
 
                                 <View style = { styles.cardBory }>   
                                     <Text style = { styles.textCard }> Nome : { cattkeObj?.name } </Text>  
-                                    <Text style = { styles.textCard }> Sexo : { cattkeObj?.sexo  == "m" ? "Masculino" : "Femenino" } </Text>         
+                                    <Text style = { styles.textCard }> Sexo : { cattkeObj?.sexo  == "m" ? "Macho" : "Femea" } </Text>         
                                     <Text style = { styles.textCard }> Raça : { cattkeObj?.breed } </Text>    
-                                    <Text style = { styles.textCard }> Peso : { cattkeObj?.weight } ( kg ) </Text>                             
+                                    <Text style = { styles.textCard }> Peso : { cattkeObj?.weight } ( kg ) </Text>      
+                                    <Text style = { styles.textCard }> data : { picket?.dateEntryPicket }  </Text>                            
                                 </View>
 
                                 <RectButton style = { styles.btnCard } onPress={() => handleDeletCattleList( String( picket?.id ) )} >

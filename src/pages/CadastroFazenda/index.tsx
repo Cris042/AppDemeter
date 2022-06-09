@@ -28,6 +28,16 @@ interface Farms
   longitude: number;
 }
 
+interface User
+{
+  id: string;
+  name: string;
+  email: string;
+  isAdmin: number;
+  avatar: string;
+  token: string;
+}
+
 export default function Data() 
 {
   const dataKey = '@appIF:Farm';
@@ -41,6 +51,7 @@ export default function Data()
   const [ status, setStatus ] = useState( true );
 
   const [ farms , setFarms ] = useState<Farms[]>([]);
+  const [ user, setUser ] = useState<User[]>([]);
 
   useEffect(() => 
   {
@@ -55,7 +66,18 @@ export default function Data()
         setFarms( expensives );  
       }
 
-    loadPiket();
+      async function load() 
+      {
+         const response = await AsyncStorage.getItem( '@appIF:User' );
+  
+         const responseFormatted = response ? JSON.parse( response ) : [];
+         const expensives = responseFormatted;
+  
+         setUser( expensives );  
+      }
+
+      load();
+      loadPiket();
 
   }, [ farms ]);
 
@@ -104,7 +126,7 @@ export default function Data()
         latitude: String( latitude ),
         longitude: String( longitude ),
         status: String( status ),
-        id_user: String( uuid.v4() ),
+        id_user: String( user[0]?.id ),
       }
 
       if( size !== "" && farmsExistsAlert?.id === undefined )       

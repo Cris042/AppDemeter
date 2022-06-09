@@ -160,7 +160,7 @@ export default function FazendaEdit()
         id_user: String( farm?.id_user ),
       }
 
-      if( name != farm?.name )
+      if( name != farm?.name && name != "" )
       {
          const farmsExistsAlert =  farms.find( farms => farms.name ===  name );
 

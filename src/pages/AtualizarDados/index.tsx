@@ -62,7 +62,7 @@ export default function Data() {
           onChangeText = { setEmail } 
       />   
 
-      <Text style={styles.nextButtonText}>Editar</Text>
+      {/* <Text style={styles.nextButtonText}>Editar</Text> */}
 
     </ScrollView>
     

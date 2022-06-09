@@ -23,6 +23,7 @@ interface Farms
   countFood: number;
   latitude: number;
   longitude: number;
+  status: number;
 }
 
 interface User
@@ -107,13 +108,34 @@ export default function Map()
 
       async function loadFarms() 
       {
+        const response = await AsyncStorage.getItem( dataKey );
+
+        const responseFormatted = response ? JSON.parse( response ) : [];
+        const expensives = responseFormatted;
+
+        setFarms( expensives );  
+        //  const response = await AsyncStorage.getItem( dataKey );
+
+        //  const responseFormatted = response ? JSON.parse( response ) : [];
+        //  let expensives = [{}];
+        //  let i = 0;
+
+        //  if( responseFormatted.length > 1 )
+        //  {
+        //     responseFormatted.forEach( ( element: { estado: number; }) => {
     
-         const response = await AsyncStorage.getItem( dataKey );
+        //       if( element.estado == 1)    
+        //       { 
+        //         expensives[i] = element;  
+        //         i++;
+        //       }
+              
+        //     });
+        //  }
 
-         const responseFormatted = response ? JSON.parse( response ) : [];
-         const expensives = responseFormatted;
+        //  const expensivesFormatted = expensives ? JSON.parse( String( expensives ) ) : [];
 
-         setFarms( expensives );   
+        //  setFarms( expensivesFormatted );   
 
       }
 

@@ -1,30 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, Text, TextInput, View, Switch } from "react-native";
+import { ScrollView, Text, TextInput } from "react-native";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { RectButton } from "react-native-gesture-handler";
-import { TextInputMask } from 'react-native-masked-text';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Picker } from '@react-native-picker/picker';
 import  DatePicker  from 'react-native-datepicker';
-import { useForm } from 'react-hook-form';
 import uuid from 'react-native-uuid';
-import * as Yup from 'yup';
 
 import styles from "./styles";
 
-interface Breed
-{
-  id: number;
-  name: string;
-  consumption: number;
-}
 interface Farms 
 {
   id: number;
   name: string;
   size: number;
+  status: string;
   countFood: number;
   latitude: number;
   longitude: number;
@@ -41,14 +32,14 @@ interface Cattle
   earring: number;
 }
 
-interface PickedUsed
+interface User
 {
-    id: number;
-    dateEntryPicket: String,
-    dateExitPicket: String,
-    picketID : number,
-    cattleID : string,
-    occupancyRate : number,
+  id: string;
+  name: string;
+  email: string;
+  isAdmin: number;
+  avatar: string;
+  token: string;
 }
 
 
@@ -74,6 +65,7 @@ export default function Data() {
  
   const [ farms , setFarms ] = useState<Farms[]>([]);
   const [ cattle , setCattle ] = useState<Cattle[]>([]);
+  const [ user, setUser ] = useState<User[]>([]);
   
   useEffect(() => 
   {
@@ -98,7 +90,17 @@ export default function Data() {
        setCattle( expensives );
     }
 
+    async function load() 
+    {
+       const response = await AsyncStorage.getItem( '@appIF:User' );
 
+       const responseFormatted = response ? JSON.parse( response ) : [];
+       const expensives = responseFormatted;
+
+       setUser( expensives );  
+    }
+
+    load();
     loadPiket();
     loadCattle();
 
@@ -179,7 +181,7 @@ export default function Data() {
           var id = String( uuid.v4() );
           var idPicketUsed = String( uuid.v4() );
 
-          var earringAux = Number( earring )+ i;
+          var earringAux = Number( earring ) + i;
 
           obj[ i ] = 
           {
@@ -198,7 +200,7 @@ export default function Data() {
             matriz: String( matriz ),
             farm: String( typePiquet?.id ),
             occupancyRate: String( occupancyRate.toFixed( 1 ) ),
-            id_user: String( uuid.v4() ),
+            id_user: String( user[0]?.id ),
           }
 
           picketUsed[ i ] = 
@@ -211,12 +213,13 @@ export default function Data() {
             occupancyRate : occupancyRate.toFixed( 1 ),
           }
       }
-
-    
+   
       handleCreate( obj );
 
-      if( farm != "-1" )
+      if( farm != "-1" && status != "l" )
         handleCreatePicketUsed( picketUsed );
+      else
+        alert("Nao foi possivel adicionar os gados ao pasto, pois nao e permetido adicionar gados que estao emprestados.");
 
       navigation.navigate("ListarGados" );
 
@@ -280,7 +283,7 @@ export default function Data() {
           placeholder="select date"
           format="DD-MM-YYYY"
           minDate="01-01-1980"
-          maxDate="31-12-2021"
+          maxDate="31-12-2022"
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"
           customStyles={{
@@ -333,8 +336,8 @@ export default function Data() {
           mode="date"
           placeholder="select date"
           format="DD-MM-YYYY"
-          minDate="01-01-2021"
-          maxDate="31-12-2021"
+          minDate="01-01-2000"
+          maxDate="31-12-2022"
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"
           customStyles={{
@@ -367,9 +370,12 @@ export default function Data() {
           <Picker.Item label = "Escolhar uma Pasto" value = "-1" />
           { farms.map(( farm ) => 
           {
-              return (
-                <Picker.Item key = { farm.id } style ={ styles.picker}  label = { farm.name } value = { farm.name } />
-              );
+              if( String( farm.status ) == "true")
+              {
+                  return (
+                    <Picker.Item key = { farm.id } style ={ styles.picker}  label = { farm.name } value = { farm.name } />
+                  );
+              }
           })}
         
 
@@ -435,8 +441,6 @@ export default function Data() {
           <Picker.Item style={styles.picker} label = "Ativo" value = "a" />
           <Picker.Item style={styles.picker} label = "Emprestado" value = "e" />   
           <Picker.Item style={styles.picker} label = "Locado" value = "l" />
-          <Picker.Item style={styles.picker} label = "Morto" value = "m" />
-        
       </Picker>
  
       <RectButton style={styles.nextButton} onPress={ handle }>

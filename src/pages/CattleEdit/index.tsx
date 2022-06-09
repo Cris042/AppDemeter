@@ -1,40 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, Text, TextInput, View, Switch } from "react-native";
+import { ScrollView, Text, TextInput } from "react-native";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { RectButton } from "react-native-gesture-handler";
-import { TextInputMask } from 'react-native-masked-text';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Picker } from '@react-native-picker/picker';
 import  DatePicker  from 'react-native-datepicker';
-import { useForm } from 'react-hook-form';
 import uuid from 'react-native-uuid';
-import * as Yup from 'yup';
 
 import styles from "./styles";
 
 interface DetailsRouteParams 
 {
-  id: string;
+    id: string;
 }
+
 interface Cattle
 {
-  id: String;
-  name: string;
-  breed: string; 
-  status: boolean;
-  initialWeight: number; 
-  node: string;
-  weight: number;  
-  sex: string;
-  age: Date;  
-  purchaseValue: number;
-  datePurchase: Date;
-  earring: number;
-  matriz: string;
-  farm: string;
-  occupancyRate: number;
+    id: String;
+    name: string;
+    breed: string; 
+    status: boolean;
+    initialWeight: number; 
+    node: string;
+    weight: number;  
+    sex: string;
+    age: Date;  
+    purchaseValue: number;
+    datePurchase: Date;
+    earring: number;
+    matriz: string;
+    farm: string;
+    occupancyRate: number;
+    id_user: string;
 }
 
 export default function Data() {
@@ -148,23 +146,23 @@ export default function Data() {
         matriz: String( cattlee?.matriz ),
         farm: String( cattlee?.farm ),
         occupancyRate: String( cattlee?.occupancyRate ),
-        id_user: String( uuid.v4() ),
+        id_user: String( cattlee?.id_user ),
           
     }
-
   
-    if( name != cattlee?.name )
+    if( name != cattlee?.name && name != "")
     {
-      const cattleExistsAlert =  cattle.find( cattle => cattle.name ===  name );
+       const cattleExistsAlert =  cattle.find( cattle => cattle.name ===  name );
 
-      if( cattleExistsAlert == undefined )
-      {
-        handleCreate( obj, String( cattlee?.id ) );
-        navigation.navigate("ListarGados" );
-      }
-      else
-        alert("Ops! Ja existe um animal com esse nome");
+       if( cattleExistsAlert != undefined)   
+          alert("Ops! Ja existe um animal com esse nome");     
+    }
+    else if( earring != String( cattlee?.earring ) && earring != "")
+    {
+       const cattleEarringExistsAlert = cattle.find( cattle => cattle.earring == Number( earring ) );
 
+       if( cattleEarringExistsAlert != undefined && cattleEarringExistsAlert == undefined )      
+          alert("Ops! Ja existe um animal com esse brinco");
     }
     else
     {
@@ -229,7 +227,7 @@ export default function Data() {
           mode="date"
           format="DD-MM-YYYY"
           minDate="01-01-1980"
-          maxDate="31-12-2021"
+          maxDate="31-12-2022"
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"
           customStyles={{
@@ -288,8 +286,8 @@ export default function Data() {
           mode="date"
           placeholder = { String( cattlee?.datePurchase )  }
           format="DD-MM-YYYY"
-          minDate="01-01-2021"
-          maxDate="31-12-2021"
+          minDate="01-01-2022"
+          maxDate="31-12-2002"
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"
           customStyles={{

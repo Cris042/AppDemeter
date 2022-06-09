@@ -29,38 +29,38 @@ export default function Login()
     if( reg.test( email ) != true )
       alert("Email invalido");
 
-    const resp = await api.post("authenticate/sessions", { data } );
+    // const resp = await api.post("authenticate/sessions", { data } );
 
     const dataKey = '@appIF:User';
     AsyncStorage.removeItem( dataKey );
 
-    if( resp.data.token )
-    {
+    // if( resp.data.token )
+    // {
   
-       const obj = 
-       {
-         id: resp.data.id,
-         name: resp.data.user.name,
-         email: resp.data.user.email,
-         isAdmin: resp.data.user.isAdmin,
-         avatar: resp.data.user.avatar,
-         token: resp.data.token,
-       }
+    //    const obj = 
+    //    {
+    //      id: resp.data.id,
+    //      name: resp.data.user.name,
+    //      email: resp.data.user.email,
+    //      isAdmin: resp.data.user.isAdmin,
+    //      avatar: resp.data.user.avatar,
+    //      token: resp.data.token,
+    //    }
 
-       const data = await AsyncStorage.getItem( dataKey );
-       const currentData = data ? JSON.parse( data ) : [];
+    //    const data = await AsyncStorage.getItem( dataKey );
+    //    const currentData = data ? JSON.parse( data ) : [];
 
-       const dataFormatted = [
-         ...currentData,
-         obj
-       ];
+    //    const dataFormatted = [
+    //      ...currentData,
+    //      obj
+    //    ];
 
-       await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );           
+      //  await AsyncStorage.setItem( dataKey, JSON.stringify( dataFormatted ) );           
        navigation.navigate("Home");
 
-    }
-    else
-      alert("Usuario não encontrado");
+    // }
+    // else
+    //   alert("Usuario não encontrado");
 
     
   }

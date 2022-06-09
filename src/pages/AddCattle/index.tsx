@@ -44,6 +44,7 @@ interface Farms
    name: string;
    size: number;
    countFood: number;
+   status: boolean;
    latitude: number;
    longitude: number;
 }
@@ -141,7 +142,10 @@ const CatleList: React.FC = () => {
                 objPicketUsed
             ];
 
-            await AsyncStorage.setItem( '@appIF:PicketUsed' , JSON.stringify( dataFormattedPicketUsed ) );  
+            if( String( cattleExists?.status ) != "l" || String( cattleExists?.status ) != "m" && String( typePiquet?.status ) == "true" )
+                await AsyncStorage.setItem( '@appIF:PicketUsed' , JSON.stringify( dataFormattedPicketUsed ) );  
+            else
+                alert("Nao foi possivel adicionar o animal ao pasto! verifique se o pasto e o gado estao ativos.")
 
             const idPiket = params.id;
             navigation.navigate("AddCattle", { idPiket } );  

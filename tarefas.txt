@@ -44,11 +44,11 @@
   
 
 Ajustes
-- na hora de editar fazenda nao esta limpando os input de "status" e "tipo" e tambem esta dado que ja tem pasta com o mesmo nome
-- so lista pastos e gados que estejam ativos
-- so lista pastos e gados de um determinado usuario
-- passar UserId na hora de fazer o cadastro
+- na hora de editar fazenda e gados nao esta limpando os input
 - login nao esta mostrando menssagem de error
+
+- Recuperar o dados do usuario
+- so lista pastos e gados que estejam ativos
 
 
 
