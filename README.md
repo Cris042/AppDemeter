@@ -2,12 +2,15 @@
     App IF (Mobile) - App If
 </h1>
 
+Este documento oferece uma visão abrangente de um sistema de gerenciamento de uma fazenda.
 
 ## Tecnologias 🚀 
 
 - [x] Expo
 - [x] React Native
 - [x] Async Storag
+- [x] Node
+- [x] Sqlite
 - [x] TypeScript
 
 ## Depedencias globais necessarias 💻
