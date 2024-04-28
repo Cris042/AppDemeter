@@ -1,5 +1,5 @@
 <h1 align="center">
-    App IF (Mobile) - App If
+    App IF (Mobile) - Deméter
 </h1>
 
 Este documento oferece uma visão abrangente de um sistema de gerenciamento de uma fazenda.
