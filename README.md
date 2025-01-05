@@ -2,7 +2,7 @@
     App IF (Mobile) - Deméter
 </h1>
 
-Este documento oferece uma visão abrangente de um sistema de gerenciamento de fazendas. Projeto feito em 2021.
+Este documento oferece uma visão abrangente de um sistema de gerenciamento de fazendas. Projeto feito em 2022.
 
 ## Tecnologias 🚀 
 
