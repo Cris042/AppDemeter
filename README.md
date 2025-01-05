@@ -28,3 +28,7 @@ Este documento oferece uma visão abrangente de um sistema de gerenciamento de f
 
 1. Run `yarn typeorm migration:run` <br />
 
+## Resultados
+
+https://ojs.focopublicacoes.com.br/foco/article/view/6746/4808
+
